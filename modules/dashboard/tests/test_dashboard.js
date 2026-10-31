@@ -116,7 +116,8 @@ for (const locale of ['vi', 'en']) {
   ['xin-chao', 'bo', 'me', 'cam-on', 'ten'].forEach((slug) => store.toggleFavorite(slug));
   assert.equal(get('[data-favorites-list]').children.length, 4);
   assert.equal(get('[data-favorites-section]').hidden, false);
-  app.data.signs[0].word = '<img src=x onerror=alert(1)>';
+  // Local-video imports can change ordering; target the first favorite by stable slug.
+  app.data.signs.find((sign) => sign.slug === 'xin-chao').word = '<img src=x onerror=alert(1)>';
   store.toggleFavorite('missing-sign');
   assert.equal(get('[data-favorites-list]').children[0].children[0].children[0].textContent, '<img src=x onerror=alert(1)>');
   store.addQuizResult(2, 5, 6);

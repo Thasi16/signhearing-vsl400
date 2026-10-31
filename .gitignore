@@ -51,3 +51,14 @@ models/
 *.onnx
 *.h5
 *.safetensors
+
+# Modern frontend/backend local state
+.next/
+out/
+*.tsbuildinfo
+test-results/
+playwright-report/
+.runtime/
+.tools/
+postgres-data/
+!backend/app/models/

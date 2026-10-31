@@ -1,0 +1,37 @@
+"""Progressive migration adapter: reuse the team's existing modules without rewriting them.
+
+No new learning API or database model is introduced. This module calls pure rendering
+functions; importing serve does not start its HTTP server.
+"""
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[3]
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))
+
+import app_modules  # noqa: E402
+from serve import page_context, render_page  # noqa: E402
+
+
+def render(locale: str, path: str) -> tuple[str, int]:
+    if app_modules.is_app_path(path):
+        try:
+            return app_modules.render(
+                locale, path.rstrip("/"), page_context(locale, path, "app")
+            ), 200
+        except app_modules.NotFound:
+            pass
+    return render_page(locale, "/404", "error").decode("utf-8"), 404
+
+
+def static_file(path: str) -> Path | None:
+    if path.startswith(("/static/app/", "/static/m/")):
+        return app_modules.static_file(path)
+    candidate = (ROOT / path.lstrip("/")).resolve()
+    base = (ROOT / "static").resolve()
+    allowed = {".css", ".js", ".png", ".svg", ".webp", ".woff2", ".mp4"}
+    if candidate.is_relative_to(base) and candidate.suffix in allowed and candidate.is_file():
+        return candidate
+    return None
