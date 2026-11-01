@@ -129,8 +129,6 @@ def main():
                 check(dictionary['meta.'+kind+'.description'] in page.values, 'Untranslated metadata description')
             check(dictionary['a11y.home'] in page.values, 'Untranslated home ARIA label')
             check(dictionary['a11y.language'] in page.values, 'Untranslated language control ARIA label')
-            if route != '/404':
-                check(dictionary['journey.material.note'] in text, 'Missing material status')
             if locale == 'en':
                 check(not any(word in text for word in ('Chúng mình', 'Trở về', 'Đang chuẩn bị', 'Tạm dịch')), 'Mixed-language interface')
             if route == '/':

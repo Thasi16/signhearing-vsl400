@@ -31,6 +31,7 @@ def page_context(locale, path, kind):
         'meta.description': values['meta.' + kind + '.description'],
         'url.home': '/?lang=' + locale,
         'url.app': '/app?lang=' + locale,
+        'url.account': '/app/account?lang=' + locale,
         'url.vi': path + '?lang=vi',
         'url.en': path + '?lang=en',
         'state.vi': 'aria-current="true"' if locale == 'vi' else '',

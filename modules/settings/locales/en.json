@@ -40,9 +40,7 @@
   "settings.camera.help.return": "Return to self-practice, reload if your browser asks, then select Turn on camera. You can also practise using a physical mirror without enabling the camera.",
   "settings.about.title": "About & limitations",
   "settings.about.role": "SignHearing supports self-study of Vietnamese Sign Language. It does not replace a teacher or an interpreter.",
-  "settings.about.materials": "Learning materials are still being prepared; official expert-reviewed lesson videos are not yet available. Sample videos used to try the interface do not replace official learning materials.",
+  "settings.about.materials": "Learning content is organised around the VSL 400 path.",
   "settings.about.ai": "This version has no AI sign recognition or scoring. Practice results are your own assessment.",
-  "settings.about.sample": "Sample content carries this label and is not yet expert-reviewed learning material.",
-  "settings.account.title": "Account",
-  "settings.account.future": "Available when sign-in is added"
+  "settings.about.sample": "Content marked Sample is used to experience the interface."
 }

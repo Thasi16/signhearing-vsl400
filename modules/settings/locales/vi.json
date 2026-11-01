@@ -40,9 +40,7 @@
   "settings.camera.help.return": "Quay lại trang Tự luyện, tải lại trang nếu trình duyệt yêu cầu, rồi bấm Bật camera. Bạn cũng có thể luyện trước gương thật mà không bật camera.",
   "settings.about.title": "Giới thiệu & giới hạn",
   "settings.about.role": "SignHearing hỗ trợ tự học Ngôn ngữ Ký hiệu Việt Nam, không thay thế giáo viên hoặc phiên dịch viên.",
-  "settings.about.materials": "Học liệu đang được biên soạn; chưa có video học liệu chính thức đã được chuyên gia duyệt. Video mẫu dùng để thử giao diện không thay thế học liệu chính thức.",
+  "settings.about.materials": "Nội dung học tập được tổ chức theo lộ trình VSL 400.",
   "settings.about.ai": "Bản này chưa có AI nhận diện hoặc chấm ký hiệu. Kết quả tự luyện do bạn tự đánh giá.",
-  "settings.about.sample": "Nội dung mẫu được gắn nhãn này và chưa phải học liệu đã được chuyên gia duyệt.",
-  "settings.account.title": "Tài khoản",
-  "settings.account.future": "Sẽ có khi có đăng nhập"
+  "settings.about.sample": "Nội dung có nhãn Mẫu dùng để trải nghiệm giao diện."
 }

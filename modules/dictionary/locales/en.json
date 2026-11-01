@@ -34,9 +34,9 @@
   "dictionary.collection.name": "Your video collection",
   "dictionary.collection.filter": "Your video collection",
   "dictionary.collection.label": "Collection",
-  "dictionary.collection.summary": "Added {n} words with videos from your folder. Select “Your video collection” to view them separately. This sample content has not been reviewed by an expert.",
-  "dictionary.collection.notice": "You supplied this video; it has not been reviewed by a VSL expert. English translations are provisional. No sign-production instructions have been added.",
+  "dictionary.collection.summary": "Added {n} words with videos from your folder. Select “Your video collection” to view them separately.",
+  "dictionary.collection.notice": "Video from your collection.",
   "dictionary.collection.unassigned": "Not yet mapped to a lesson in the syllabus.",
   "dictionary.collection.related": "Other words in this video collection",
-  "dictionary.video.imported": "Video available · unreviewed"
+  "dictionary.video.imported": "Video available"
 }

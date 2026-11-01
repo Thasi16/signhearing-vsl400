@@ -136,12 +136,39 @@
     signsOf: (lessonId) => (data.signs || []).filter((s) => String(s.lesson) === String(lessonId)),
   });
 
+  /* ---------- shell preferences ---------- */
+  const sidebarToggle = document.querySelector('[data-sidebar-toggle]');
+  if (sidebarToggle) {
+    const SIDEBAR_KEY = 'signhearing:sidebar:collapsed';
+    const page = document.body;
+    let collapsed = false;
+    try { collapsed = window.localStorage.getItem(SIDEBAR_KEY) === 'true'; } catch (error) { /* use default */ }
+
+    const setSidebar = (next, savePreference) => {
+      collapsed = Boolean(next);
+      page.classList.toggle('is-sidebar-collapsed', collapsed);
+      sidebarToggle.setAttribute('aria-expanded', String(!collapsed));
+      const label = collapsed ? sidebarToggle.dataset.labelExpand : sidebarToggle.dataset.labelCollapse;
+      sidebarToggle.setAttribute('aria-label', label);
+      sidebarToggle.setAttribute('title', label);
+      if (savePreference) {
+        try { window.localStorage.setItem(SIDEBAR_KEY, String(collapsed)); } catch (error) { /* preference is optional */ }
+      }
+    };
+
+    document.documentElement.classList.add('has-sidebar-js');
+    setSidebar(collapsed, false);
+    sidebarToggle.addEventListener('click', () => setSidebar(!collapsed, true));
+  }
+
   if (!persistent) {
     document.addEventListener('DOMContentLoaded', () => {
-      const notice = document.querySelector('.app-notice');
-      if (notice) notice.insertAdjacentHTML('beforeend', '<span class="sh-notice-warn"></span>');
-      const warn = notice && notice.querySelector('.sh-notice-warn');
-      if (warn) warn.textContent = t('shell.storage.unavailable');
+      const notice = document.querySelector('[data-runtime-notice]');
+      if (notice) {
+        notice.textContent = t('shell.storage.unavailable');
+        notice.classList.add('sh-notice-warn');
+        notice.hidden = false;
+      }
     });
   }
 })();

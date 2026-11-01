@@ -13,10 +13,35 @@
   </aside>
   <div class="app-column">
     <header class="app-topbar">
-      <nav class="app-crumbs" aria-label="{{shell.crumb.label}}">{{shell.crumbs.html}}</nav>
-      <div class="app-topbar-actions">{{layout.languages}}<a class="back-link" href="{{url.home}}">← {{action.home}}</a></div>
+      <div class="app-topbar-leading">
+        <button class="app-sidebar-toggle" type="button" data-sidebar-toggle
+                data-label-collapse="{{shell.sidebar.collapse}}"
+                data-label-expand="{{shell.sidebar.expand}}"
+                aria-label="{{shell.sidebar.collapse}}" aria-expanded="true"
+                title="{{shell.sidebar.collapse}}">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3.5" y="4" width="17" height="16" rx="3"></rect>
+            <path d="M9 4v16M14.5 9l-3 3 3 3"></path>
+          </svg>
+        </button>
+        <a class="app-compact-brand" href="{{url.home}}" aria-label="{{a11y.home}}">
+          <img class="app-compact-logo" src="/static/assets/logo-horizontal.png" alt="{{site.name}}" width="2172" height="724">
+        </a>
+        <nav class="app-crumbs" aria-label="{{shell.crumb.label}}">{{shell.crumbs.html}}</nav>
+      </div>
+      <div class="app-topbar-actions">
+        {{layout.languages}}
+        <a class="back-link" href="{{url.home}}">← {{action.home}}</a>
+        <a class="app-account-link" href="{{url.account}}" aria-label="{{shell.account.open}}" title="{{shell.account.open}}">
+          <span class="app-account-tier">PREMIUM</span>
+          <span class="app-account-avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20c.7-4.2 3.2-6.3 7.5-6.3s6.8 2.1 7.5 6.3"></path></svg>
+            <i>✦</i>
+          </span>
+        </a>
+      </div>
     </header>
-    <p class="app-notice" role="note"><span class="status-dot" aria-hidden="true"></span><span>{{journey.material.note}}</span>{{shell.notice.html}}</p>
+    <p class="app-notice app-notice--runtime" data-runtime-notice role="status" hidden></p>
     <main id="main" class="app-content" tabindex="-1">{{module.body}}</main>
     <footer class="app-footer"><small>© {{year}} {{site.name}}</small><span class="slogan">{{site.tagline}}</span></footer>
   </div>

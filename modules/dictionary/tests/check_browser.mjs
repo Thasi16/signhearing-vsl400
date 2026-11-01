@@ -147,7 +147,7 @@ try {
         for (const sign of localSigns) {
           await navigate(`/app/signs/${sign.slug}?lang=${lang}`, '.dictionary-detail');
           await waitFor('document.querySelector("video") && document.querySelector("video").readyState >= 1');
-          await check('document.querySelector("video").videoWidth > 0 && document.querySelector("video").muted && document.querySelector("video").volume === 0 && !!document.querySelector(".dictionary-video-notice")', 'real MP4 decoded and unreviewed notice');
+          await check('document.querySelector("video").videoWidth > 0 && document.querySelector("video").muted && document.querySelector("video").volume === 0 && !document.querySelector(".dictionary-video-notice")', 'real MP4 decoded without review warning');
           await check('document.documentElement.scrollWidth <= innerWidth && !document.querySelector(".dictionary-lesson a") && document.querySelectorAll(".dictionary-related .dictionary-item").length === 11', 'standalone collection layout and related signs');
           await evaluate('(async () => {const video=document.querySelector("video"); await video.play();})()');
           await waitFor('document.querySelector("video").currentTime > 0.05');

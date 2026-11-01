@@ -36,7 +36,6 @@ def context(request):
             groups.insert(0,
                 '<section class="practice-group" data-practice-group aria-labelledby="practice-local-title">'
                 f'<h2 id="practice-local-title">{esc(t["practice.collection.title"])}</h2>'
-                f'<p class="practice-group-note">{esc(t["practice.collection.notice"])}</p>'
                 f'<ul class="practice-choices">{cards(local)}</ul></section>')
         return {
             'practice.groups.html': ''.join(groups) if groups else f'<p class="sh-card sh-empty">{esc(t["practice.empty.content"])}</p>',
@@ -89,5 +88,5 @@ def context(request):
         'practice.next.html': next_link,
         'practice.parent.html': parent_link,
         'practice.back_url': request.url('/app/practice'),
-        'practice.collection_notice.html': ('<p class="practice-source-note">' + esc(t['practice.collection.notice']) + '</p>') if local else '',
+        'practice.collection_notice.html': '',
     }
