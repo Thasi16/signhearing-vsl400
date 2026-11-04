@@ -13,6 +13,8 @@
 .m-account .account-status{display:grid;justify-items:end;gap:5px;text-align:right}
 .m-account .account-status strong{font-size:18px;color:var(--navy)}
 .m-account .account-status small{font-size:11px;color:var(--muted)}
+.m-account .account-logout{margin-top:5px;padding:7px 12px;border:1px solid #bdd5ed;border-radius:10px;background:#fff;color:#3f668e;font:inherit;font-size:11px;font-weight:700;cursor:pointer;transition:background .18s,border-color .18s,color .18s}
+.m-account .account-logout:hover{border-color:#e0a6ba;background:#fff1f6;color:#9c3f63}
 .m-account .account-premium-label{display:inline-flex;align-items:center;min-height:32px;padding:5px 14px;border:1px solid #8cb8e9;border-radius:20px;background:linear-gradient(90deg,#1556ad,#e36f99,#2678ed,#1556ad);background-size:240% auto;color:#fff;font-size:11px;font-weight:900;letter-spacing:.16em;text-shadow:0 0 9px #fff;box-shadow:0 0 12px #7db4ff88,0 0 20px #e98aaa55;animation:account-premium-label-shine 2.5s linear infinite,account-premium-label-pulse 1.8s ease-in-out infinite}
 .m-account .account-premium-label--small{min-height:28px;padding:4px 11px;font-size:9px}
 .m-account .account-premium-frame{border-color:#75aae6;animation:account-premium-frame-glow 2s ease-in-out infinite}

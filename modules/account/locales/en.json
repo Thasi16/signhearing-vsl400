@@ -21,6 +21,7 @@
   "account.plan": "Current plan",
   "account.current.plan": "Premium monthly",
   "account.current.note": "Default status for the current interface",
+  "account.logout": "Sign out",
   "account.billing": "Billing",
   "account.billing.value": "Not connected",
   "account.renewal": "Next renewal",

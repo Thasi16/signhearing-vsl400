@@ -19,6 +19,7 @@
       <span class="account-premium-label">PREMIUM</span>
       <strong>{{account.current.plan}}</strong>
       <small>{{account.current.note}}</small>
+      <button class="account-logout" type="button" data-account-logout>{{account.logout}}</button>
     </div>
   </section>
 
@@ -29,7 +30,7 @@
         <span class="account-info-icon" aria-hidden="true">i</span>
       </div>
       <dl>
-        <div><dt>{{account.name}}</dt><dd>{{account.name.value}}</dd></div>
+        <div><dt>{{account.name}}</dt><dd data-account-name>{{account.name.value}}</dd></div>
         <div><dt>{{account.email}}</dt><dd>{{account.email.value}}</dd></div>
         <div><dt>{{account.id}}</dt><dd>SH-PREMIUM-0001</dd></div>
         <div><dt>{{account.joined}}</dt><dd>01/11/2026</dd></div>

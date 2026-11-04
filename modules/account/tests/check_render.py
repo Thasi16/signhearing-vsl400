@@ -42,6 +42,7 @@ class AccountChecks(unittest.TestCase):
             self.assertEqual(1, sum(tag == 'button' and 'disabled' in attrs for tag, attrs in tags))
             self.assertIn('account-premium-frame', source)
             self.assertIn('PREMIUM', source)
+            self.assertIn('data-account-logout', source)
             self.assertNotIn('{{account.', source)
 
 

@@ -8,6 +8,7 @@
  *   SH.url(path)       adds ?lang=vi|en to an internal link
  *   SH.lesson(id) / SH.sign(slug) / SH.signsOf(lessonId)
  *   SH.normalize(text) lower-case, no Vietnamese diacritics (for search)
+ *   SH.auth.*          demo sign-in state used by the login and account screens
  *   SH.store.*         learner progress (see below); fires window event 'sh:store'
  */
 (function () {
@@ -21,6 +22,32 @@
   const data = readJson('sh-data');
   const strings = readJson('sh-i18n');
   const locale = document.documentElement.lang === 'en' ? 'en' : 'vi';
+
+  /* ---------- demo authentication ---------- */
+  const AUTH_KEY = 'signhearing:demo-auth';
+  const AUTH_USER_KEY = 'signhearing:demo-user';
+  const cookieValue = (name) => {
+    const match = document.cookie.split('; ').find((item) => item.startsWith(name + '='));
+    if (!match) return '';
+    try { return decodeURIComponent(match.slice(name.length + 1)); } catch (error) { return ''; }
+  };
+  const authenticated = () => {
+    try { if (window.localStorage.getItem(AUTH_KEY) === 'true') return true; } catch (error) { /* cookie fallback */ }
+    return cookieValue('signhearing_demo_auth') === '1';
+  };
+  const authUsername = () => {
+    try {
+      const stored = window.localStorage.getItem(AUTH_USER_KEY);
+      if (stored) return stored;
+    } catch (error) { /* cookie fallback */ }
+    return cookieValue('signhearing_demo_user');
+  };
+  if (!authenticated()) {
+    const next = window.location.pathname + window.location.search + window.location.hash;
+    window.location.replace('/login?lang=' + locale + '&next=' + encodeURIComponent(next));
+    return;
+  }
+  document.body.classList.add('is-auth-ready');
 
   const t = (key, vars) => {
     let value = strings[key];
@@ -129,11 +156,29 @@
     },
   };
 
+  const auth = Object.freeze({
+    isAuthenticated: authenticated,
+    username: authUsername,
+    logout() {
+      try {
+        window.localStorage.removeItem(AUTH_KEY);
+        window.localStorage.removeItem(AUTH_USER_KEY);
+      } catch (error) { /* cookie cleanup still works */ }
+      document.cookie = 'signhearing_demo_auth=; Path=/; Max-Age=0; SameSite=Lax';
+      document.cookie = 'signhearing_demo_user=; Path=/; Max-Age=0; SameSite=Lax';
+      window.location.replace('/login?lang=' + locale);
+    },
+  });
+
   window.SH = Object.freeze({
-    data, locale, t, url, normalize, store,
+    data, locale, t, url, normalize, store, auth,
     lesson: (id) => lessons.get(String(id)) || null,
     sign: (slug) => signs.get(slug) || null,
     signsOf: (lessonId) => (data.signs || []).filter((s) => String(s.lesson) === String(lessonId)),
+  });
+
+  document.querySelectorAll('[data-shell-logout]').forEach(button => {
+    button.addEventListener('click', () => auth.logout());
   });
 
   /* ---------- shell preferences ---------- */
