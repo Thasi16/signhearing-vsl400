@@ -16,6 +16,8 @@
   "a11y.en": "Switch the interface to English",
   "a11y.mascot": "The pale blue SignHearing mascot with pink gills, smiling to welcome you",
   "a11y.illustration": "SignHearing brand illustration, not an example of a VSL sign",
+  "a11y.motion.pause": "Pause mascot animation",
+  "a11y.motion.resume": "Resume mascot animation",
   "nav.menu": "Menu",
   "nav.vsl": "What is VSL?",
   "nav.story": "Our story",

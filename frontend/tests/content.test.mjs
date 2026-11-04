@@ -6,7 +6,7 @@ import { createHash } from "node:crypto";
 const root = new URL("../../", import.meta.url);
 const json = async (path) =>
   JSON.parse(await readFile(new URL(path, root), "utf8"));
-test("all 499 original translations survive the migration, with VI/EN parity", async () => {
+test("all source translations are preserved, including VI/EN motion controls", async () => {
   const modules = (
     await readdir(new URL("modules/", root), { withFileTypes: true })
   ).filter(
@@ -35,7 +35,7 @@ test("all 499 original translations survive the migration, with VI/EN parity", a
     Object.keys(generated.vi).sort(),
     Object.keys(generated.en).sort(),
   );
-  assert.equal(Object.keys(generated.vi).length, 499);
+  assert.equal(Object.keys(generated.vi).length, 501);
 });
 test("logo and mascot are identical to the original assets", async () => {
   for (const name of ["logo-horizontal.png", "mascot.png"]) {

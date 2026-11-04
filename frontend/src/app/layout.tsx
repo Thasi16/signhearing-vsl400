@@ -4,6 +4,7 @@ import { getLocale, dictionary } from "@/lib/i18n";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { AnchorBehavior } from "@/components/shared/anchor-behavior";
+import { manrope } from "@/lib/fonts";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -22,7 +23,7 @@ export default async function RootLayout({
 }) {
   const locale = await getLocale();
   return (
-    <html lang={locale}>
+    <html lang={locale} className={manrope.variable}>
       <body>
         <a className="skip-link" href="#main">
           {dictionary(locale)["a11y.skip"]}

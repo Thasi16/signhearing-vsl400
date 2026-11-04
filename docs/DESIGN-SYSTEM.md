@@ -18,8 +18,11 @@ The original blue/white pair measures 4.21:1; use the darker derived blue for
 small white button text. Large hero text keeps the original blue. Computed
 color checks are not a substitute for browser accessibility testing.
 
-System fonts Segoe UI/Arial retain Vietnamese support without remote font
-requests. Body 16px, secondary copy 12–15px, headings fluid 30–66px. Content
+The public frontend uses locally hosted variable Manrope, with Segoe UI/Arial
+fallbacks. Its original SIL OFL license is included in `frontend/src/assets/fonts/`.
+The font contains every letter used by the Vietnamese public dictionary; no
+Google Fonts request is made at page load. Body 16px, secondary copy 12–15px,
+hero headings fluid 29–56px. Content
 container 1280px (1360px on large screens), body text constrained for reading.
 Spacing follows 4/8/12/16/24/32/48/64/96px steps. Surfaces use 12/18/24/36px
 radii; controls use 44px minimum touch height and capsule variants.
@@ -33,8 +36,12 @@ and translations remain server rendered.
 Editorial sections alternate white/sky, two-column reading/quotation layouts,
 three challenge cards, brand illustration/product direction, a development
 timeline and the community invitation. Motion reveal starts from visible SSR
-content and uses only transform/opacity. Reduced-motion disables movement.
-No continuous parallax or mascot movement is needed.
+content and uses only transform/opacity. On the homepage, the unchanged mascot
+now gently floats on a six-second cycle, with a synchronized shadow and a
+pause/resume control translated into VI/EN. Motion starts only after hydration;
+without JavaScript or with reduced-motion enabled the mascot remains still.
+The hero uses soft blue/pink radial layers and a subtle grid. Headline phrases
+and paragraph widths are balanced to avoid crowded text.
 
 Responsive breakpoints: 380, 700, 960, 1200, 1600px. Shared app styling in
 `app_shell/modern.css` is loaded after module styles, leaves data attributes and
