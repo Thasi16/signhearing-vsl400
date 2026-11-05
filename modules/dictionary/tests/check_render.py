@@ -83,7 +83,7 @@ class RenderChecks(unittest.TestCase):
             for locale in ('vi', 'en'):
                 values = VIEW.context(request(locale, sign['slug']))
                 self.assertIn('<video', values['dictionary.media.html'])
-                self.assertIn(DICTIONARIES[locale]['dictionary.collection.notice'], values['dictionary.media.html'])
+                self.assertNotIn('dictionary-video-notice', values['dictionary.media.html'])
                 self.assertNotIn('/app/lessons/', values['dictionary.lesson.html'])
                 self.assertNotIn('data-slug="' + sign['slug'] + '"', values['dictionary.related.html'])
 

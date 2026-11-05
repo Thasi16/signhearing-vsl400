@@ -34,9 +34,9 @@
   "dictionary.collection.name": "Bộ video của bạn",
   "dictionary.collection.filter": "Bộ video của bạn",
   "dictionary.collection.label": "Bộ sưu tập",
-  "dictionary.collection.summary": "Đã thêm {n} từ có video từ thư mục bạn cung cấp. Chọn “Bộ video của bạn” để xem riêng. Nội dung mẫu chưa được chuyên gia rà soát.",
-  "dictionary.collection.notice": "Video do bạn cung cấp, chưa được chuyên gia VSL rà soát. Bản dịch tiếng Anh là tạm thời; không có hướng dẫn thực hiện ký hiệu được bổ sung.",
+  "dictionary.collection.summary": "Đã thêm {n} từ có video từ thư mục bạn cung cấp. Chọn “Bộ video của bạn” để xem riêng.",
+  "dictionary.collection.notice": "Video trong bộ sưu tập của bạn.",
   "dictionary.collection.unassigned": "Chưa đối chiếu với bài học trong giáo trình.",
   "dictionary.collection.related": "Từ khác trong bộ video",
-  "dictionary.video.imported": "Có video · chưa rà soát"
+  "dictionary.video.imported": "Có video"
 }

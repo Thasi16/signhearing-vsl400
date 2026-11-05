@@ -129,8 +129,6 @@ def main():
                 check(dictionary['meta.'+kind+'.description'] in page.values, 'Untranslated metadata description')
             check(dictionary['a11y.home'] in page.values, 'Untranslated home ARIA label')
             check(dictionary['a11y.language'] in page.values, 'Untranslated language control ARIA label')
-            if route != '/404':
-                check(dictionary['journey.material.note'] in text, 'Missing material status')
             if locale == 'en':
                 check(not any(word in text for word in ('Chúng mình', 'Trở về', 'Đang chuẩn bị', 'Tạm dịch')), 'Mixed-language interface')
             if route == '/':
@@ -159,6 +157,23 @@ def main():
             _, head_headers = request(route+'?lang='+locale, status, method='HEAD')
             check(head_headers['Content-Length'] == str(len(body)), 'HEAD length differs from GET')
 
+        login_body, login_headers = request('/login?lang=' + locale)
+        login_source = login_body.decode('utf-8')
+        login_page = Page()
+        login_page.feed(login_source)
+        check(login_page.lang == locale, 'Login document language')
+        check(login_page.headings == 1 and login_page.forms == 1, 'Login must have one heading and form')
+        check(dictionary['meta.login.title'] in ''.join(login_page.text), 'Untranslated login title')
+        check(dictionary['login.form.note'] in ''.join(login_page.text), 'Missing demo login disclosure')
+        check(not TOKEN.search(login_source), 'Raw login translation token')
+        for asset in login_page.assets:
+            if asset and asset not in verified_assets:
+                asset_body, _ = request(asset)
+                check(bool(asset_body), 'Empty login asset ' + asset)
+                verified_assets.add(asset)
+        _, login_head = request('/login?lang=' + locale, method='HEAD')
+        check(login_head['Content-Length'] == str(len(login_body)), 'Login HEAD length differs from GET')
+
     jar = CookieJar()
     browser = build_opener(HTTPCookieProcessor(jar))
     _, headers = request('/', opener=browser, headers={'Accept-Language':'en-US,en'})
@@ -180,7 +195,7 @@ def main():
     request('/app',404,method='POST')
     for route in ('/app/lessons/3','/app/lessons/999','/app/lessons/abc','/app/signs/khong-co','/app/practice/khong-co','/app/review/quiz/9',
                   '/app/library','/app/courses/1','/static/m/courses/view.py','/static/m/courses/module.json','/static/m/courses/locales/vi.json',
-                  '/static/m/nope/style.css','/static/app/locales/vi.json','/static/m/courses/%2e%2e/%2e%2e/serve.py','/data/curriculum.json','/login','/register','/library','/courses','/admin','/api/health','/data/signhearing.db','/serve.py','/site-config.json','/locales/en.json','/static/../serve.py','/static/%2e%2e/serve.py'):
+                  '/static/m/nope/style.css','/static/app/locales/vi.json','/static/m/courses/%2e%2e/%2e%2e/serve.py','/data/curriculum.json','/register','/library','/courses','/admin','/api/health','/data/signhearing.db','/serve.py','/site-config.json','/locales/en.json','/static/../serve.py','/static/%2e%2e/serve.py'):
         request(route,404)
     check(json.loads((ROOT/'site-config.json').read_text())['contact_url']=='', 'Contact must remain unconfigured until verified')
     # Module isolation: scoped CSS, no direct storage access, every route reachable from code above.

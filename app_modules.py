@@ -31,6 +31,7 @@ ICONS = {
     'cards': '<rect x="7" y="4" width="12" height="15" rx="2"/><path d="M5 7v12a2 2 0 0 0 2 2h9"/>',
     'chart': '<path d="M4 20h16M7 16v-4M12 16V8M17 16v-7"/>',
     'settings': '<circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/>',
+    'user': '<circle cx="12" cy="8" r="4"/><path d="M4.5 20c.7-4.2 3.2-6.3 7.5-6.3s6.8 2.1 7.5 6.3"/>',
     'book': '<path d="M5 4h9a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM17 20h2V7"/>',
 }
 
