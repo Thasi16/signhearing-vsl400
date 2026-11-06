@@ -15,7 +15,7 @@ def locale_for(request: Request) -> str:
 def page_response(request: Request, path: str) -> HTMLResponse:
     locale = locale_for(request)
     # Unknown paths never enter template URLs.
-    canonical = path if legacy.app_modules.is_app_path(path) else "/404"
+    canonical = path if path == "/login" or legacy.app_modules.is_app_path(path) else "/404"
     body, status = legacy.render(locale, canonical)
     response = HTMLResponse(
         body,
@@ -42,6 +42,14 @@ def page_response(request: Request, path: str) -> HTMLResponse:
         samesite="lax",
         secure=request.url.scheme == "https",
     )
+    return response
+
+
+@router.api_route("/login", methods=["GET", "HEAD"])
+def login_page(request: Request) -> Response:
+    response = page_response(request, "/login")
+    if request.method == "HEAD":
+        response.body = b""
     return response
 
 

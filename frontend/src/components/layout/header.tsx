@@ -8,7 +8,8 @@ import { MobileNavigation } from "./mobile-navigation";
 
 export async function Header({ locale }: { locale: Locale }) {
   const t = dictionary(locale);
-  const path = (await headers()).get("x-sh-page") === "/" ? "/" : "/404";
+  const page = (await headers()).get("x-sh-page");
+  const path = page === "/" || page === "/features" ? page : "/404";
   const links = [
     ["vsl", "nav.vsl"],
     ["cau-chuyen", "nav.story"],
@@ -18,6 +19,10 @@ export async function Header({ locale }: { locale: Locale }) {
     href: localized(`/#${id}`, locale),
     label: t[key as keyof typeof t],
   }));
+  links.splice(2, 0, {
+    href: localized("/features", locale),
+    label: t["nav.features"],
+  });
   const language = {
     path,
     label: t["a11y.language"],
@@ -25,7 +30,9 @@ export async function Header({ locale }: { locale: Locale }) {
     enLabel: t["a11y.en"],
   };
   return (
-    <header className="site-header">
+    <header
+      className={`site-header${path === "/features" ? " sh-features-header" : ""}`}
+    >
       <div className="shell header-inner">
         <a
           href={localized("/", locale)}
@@ -43,7 +50,15 @@ export async function Header({ locale }: { locale: Locale }) {
         </a>
         <nav className="desktop-navigation" aria-label={t["a11y.navigation"]}>
           {links.map((link) => (
-            <a key={link.href} href={link.href}>
+            <a
+              key={link.href}
+              href={link.href}
+              aria-current={
+                path === "/features" && link.href.startsWith("/features?")
+                  ? "page"
+                  : undefined
+              }
+            >
               {link.label}
             </a>
           ))}

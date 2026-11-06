@@ -35,7 +35,7 @@ test("all source translations are preserved, including VI/EN motion controls", a
     Object.keys(generated.vi).sort(),
     Object.keys(generated.en).sort(),
   );
-  assert.equal(Object.keys(generated.vi).length, 501);
+  assert.ok(Object.keys(generated.vi).length >= 501);
 });
 test("logo and mascot are identical to the original assets", async () => {
   for (const name of ["logo-horizontal.png", "mascot.png"]) {

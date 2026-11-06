@@ -31,6 +31,7 @@ def page_context(locale, path, kind):
         'meta.description': values['meta.' + kind + '.description'],
         'url.home': '/?lang=' + locale,
         'url.app': '/app?lang=' + locale,
+        'url.account': '/app/account?lang=' + locale,
         'url.vi': path + '?lang=vi',
         'url.en': path + '?lang=en',
         'state.vi': 'aria-current="true"' if locale == 'vi' else '',
@@ -55,7 +56,7 @@ def page_context(locale, path, kind):
 
 
 def render_page(locale, path, kind):
-    template = {'home': 'index.html', 'app': 'under-construction.html', 'error': '404.html'}[kind]
+    template = {'home': 'index.html', 'login': 'login.html', 'app': 'under-construction.html', 'error': '404.html'}[kind]
     return render_file(template, page_context(locale, path, kind), RAW).encode('utf-8')
 
 
@@ -187,9 +188,9 @@ class Handler(BaseHTTPRequestHandler):
             except app_modules.NotFound:
                 body = None
         if body is None:
-            kind = 'home' if path == '/' and not error else 'error'
+            kind = 'home' if path == '/' and not error else 'login' if path == '/login' and not error else 'error'
             # Unknown paths never enter a template or language-switch href.
-            canonical_path = '/' if kind == 'home' else '/404'
+            canonical_path = '/' if kind == 'home' else '/login' if kind == 'login' else '/404'
             body = render_page(locale, canonical_path, kind)
         self.response_headers(404 if kind == 'error' else 200, 'text/html; charset=utf-8', len(body), locale)
         self.end_headers()

@@ -14,7 +14,9 @@
     "format": "prettier --write src scripts tests *.json *.mjs *.ts",
     "format:check": "prettier --check src scripts tests *.json *.mjs *.ts",
     "test": "node --test tests/content.test.mjs",
-    "test:http": "node --test tests/http.test.mjs"
+    "test:http": "node --test tests/http.test.mjs",
+    "capture:features": "node scripts/capture-feature-guides.mjs",
+    "test:features": "node tests/features.browser.mjs"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "1.3.1",

@@ -17,7 +17,9 @@ export function localized(path: string, locale: Locale) {
   const [route, hash] = path.split("#");
   return `${route}${route.includes("?") ? "&" : "?"}lang=${locale}${hash ? `#${hash}` : ""}`;
 }
-export async function pageMetadata(kind: "home" | "app" | "error") {
+export async function pageMetadata(
+  kind: "home" | "app" | "error" | "features",
+) {
   const locale = await getLocale();
   const t = dictionary(locale);
   return {

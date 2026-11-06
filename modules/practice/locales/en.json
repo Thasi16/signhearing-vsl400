@@ -8,7 +8,7 @@
   "practice.privacy.body": "The camera starts only when you choose. No recording, no audio capture, no images sent anywhere. There is no AI scoring; you assess yourself and save only your checklist choices in this browser.",
   "practice.lesson": "Lesson {n} · {title}",
   "practice.collection.title": "Your video collection",
-  "practice.collection.notice": "You supplied these videos; they have not been reviewed by a VSL expert. English translations are provisional and syllabus mapping is pending.",
+  "practice.collection.notice": "Videos from your collection.",
   "practice.collection.unassigned": "This collection video has not been assigned to a syllabus lesson.",
   "practice.filter.label": "Filter signs to practise",
   "practice.filter.all": "All",

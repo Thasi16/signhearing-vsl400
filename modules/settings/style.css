@@ -39,10 +39,9 @@
 .m-settings .settings-steps,.m-settings .settings-limits{padding-left:22px;margin:12px 0 0;font-size:14px;color:var(--muted);line-height:1.8}
 .m-settings .settings-steps li,.m-settings .settings-limits li{margin-top:8px;padding-left:4px}
 .m-settings .settings-limits .sh-badge{vertical-align:middle;margin-right:4px}
-.m-settings .settings-account{background:#f7f9fc;border-style:dashed}
-.m-settings .settings-account .button{margin-top:6px;font-size:13px;padding:10px 16px;color:#5b718b;border:1px solid var(--line);box-shadow:none;cursor:not-allowed}
 .m-settings a:focus-visible,.m-settings button:focus-visible,.m-settings .settings-cards>section:focus-visible,.m-settings .settings-confirmation:focus{outline:3px solid var(--blue);outline-offset:4px}
 .m-settings [hidden]{display:none}
+
 @media(max-width:900px){
   .m-settings .settings-layout{grid-template-columns:1fr;gap:18px}
   .m-settings .settings-nav{position:static;display:flex;flex-wrap:wrap;gap:4px}

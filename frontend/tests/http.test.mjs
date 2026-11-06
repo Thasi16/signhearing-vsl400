@@ -21,14 +21,20 @@ for (const locale of ["vi", "en"]) {
     for (const key of [
       "hero.title.first",
       "hero.title.second",
-      "hero.description",
+      "immersive.hero.description",
       "story.one",
       "story.two",
-      "journey.body",
       "contact.missing.body",
       "quote.jordan.text",
       "quote.keller.text",
       "meta.home.description",
+      "immersive.hero.first",
+      "immersive.hero.second",
+      "immersive.emotion.first",
+      "immersive.emotion.second",
+      "immersive.journey.practice.body",
+      "immersive.journey.feedback.body",
+      "immersive.preview.ai.note",
     ]) {
       const escape = (s) =>
         s
@@ -44,6 +50,10 @@ for (const locale of ["vi", "en"]) {
     }
     assert.match(html, /href="#cau-chuyen"/);
     assert.ok(html.includes(`/app?lang=${locale}`));
+    assert.ok(html.includes(`/app/courses?lang=${locale}`));
+    assert.ok(html.includes(`/app/practice?lang=${locale}`));
+    assert.ok(html.includes(`/app/dictionary?lang=${locale}`));
+    assert.ok(html.includes(`/app/progress?lang=${locale}`));
     assert.ok(
       html.includes(
         "https://www.congress.gov/109/crec/2006/03/28/CREC-2006-03-28.pdf#page=13",
@@ -51,12 +61,17 @@ for (const locale of ["vi", "en"]) {
     );
     assert.ok(html.includes("https://www.helenkeller.org/get-involved/"));
     assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1);
+    assert.equal((html.match(/<section(?:\s|>)/g) || []).length, 6);
+    // No-JS output must include the complete story, with continuous effects idle.
+    assert.match(html, /class="immersive-landing" data-motion="idle"/);
+    assert.ok(!html.includes("<video"));
     assert.ok(!html.includes("{{"));
     let position = -1;
     for (const id of [
       "vsl",
       "cau-chuyen",
       "hanh-trinh",
+      "kham-pha",
       "dong-hanh",
       "lien-he",
     ]) {
@@ -66,6 +81,16 @@ for (const locale of ["vi", "en"]) {
     }
     for (const asset of ["/assets/logo-horizontal.png", "/assets/mascot.png"])
       assert.equal((await fetch(base + asset)).status, 200);
+    for (const path of [
+      "/app/courses",
+      "/app/practice",
+      "/app/dictionary",
+      "/app/progress",
+    ]) {
+      const target = await fetch(`${base}${path}?lang=${locale}`);
+      assert.equal(target.status, 200, `Landing CTA target ${path}`);
+      assert.equal(target.headers.get("content-language"), locale);
+    }
   });
   test(`unknown routes use translated HTTP 404 (${locale})`, async () => {
     const response = await fetch(`${base}/unknown-test-page?lang=${locale}`);

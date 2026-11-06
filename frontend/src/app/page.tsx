@@ -1,22 +1,33 @@
-import { getLocale, pageMetadata } from "@/lib/i18n";
-import { Hero } from "@/components/landing/hero";
-import { VslIntroduction, Challenges } from "@/components/landing/introduction";
-import { OriginStory, Journey } from "@/components/landing/story";
-import { Community } from "@/components/landing/community";
+import { dictionary, getLocale, pageMetadata } from "@/lib/i18n";
+import { ImmersiveMotion } from "@/components/landing/immersive/motion";
+import {
+  ImmersiveHero,
+  EmotionalStory,
+  InteractiveJourney,
+  FeatureBento,
+  EmotionalStage,
+  FinalInvitation,
+} from "@/components/landing/immersive/sections";
+import "@/styles/immersive.css";
 
 export async function generateMetadata() {
-  return pageMetadata("home");
+  const metadata = await pageMetadata("home");
+  const title = dictionary(await getLocale())["immersive.meta.title"];
+  return { ...metadata, title, openGraph: { ...metadata.openGraph, title } };
 }
 export default async function Home() {
   const locale = await getLocale();
   return (
-    <main id="main">
-      <Hero locale={locale} />
-      <VslIntroduction locale={locale} />
-      <Challenges locale={locale} />
-      <OriginStory locale={locale} />
-      <Journey locale={locale} />
-      <Community locale={locale} />
-    </main>
+    <ImmersiveMotion
+      pause={dictionary(locale)["immersive.motion.pause"]}
+      resume={dictionary(locale)["immersive.motion.resume"]}
+    >
+      <ImmersiveHero locale={locale} />
+      <EmotionalStory locale={locale} />
+      <InteractiveJourney locale={locale} />
+      <FeatureBento locale={locale} />
+      <EmotionalStage locale={locale} />
+      <FinalInvitation locale={locale} />
+    </ImmersiveMotion>
   );
 }

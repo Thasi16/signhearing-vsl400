@@ -52,8 +52,8 @@ def main():
             'slug': slug,
             'word': {'vi': word, 'en': english},
             'meaning': {
-                'vi': 'Ngữ cảnh đang chờ rà soát.',
-                'en': 'Context pending review.',
+                'vi': 'Ký hiệu trong bộ video của bạn.',
+                'en': 'Sign from your video collection.',
             },
             'lesson': None,
             'collection': 'local-videos',

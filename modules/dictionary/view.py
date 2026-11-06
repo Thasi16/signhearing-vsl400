@@ -80,7 +80,6 @@ def context(request):
     video += ('<div class="sh-video-placeholder" data-video-missing' + (' hidden' if source else '') + '>'
               + f'<span>{esc(t["shell.video.missing"])}</span></div>')
     if local:
-        video += '<p class="dictionary-video-notice">' + esc(t['dictionary.collection.notice']) + '</p>'
         lesson_link = esc(t['dictionary.collection.unassigned'])
     else:
         lesson_caption = t['dictionary.detail.lesson'].replace('{n}', str(lesson['id'])).replace('{title}', c.text(lesson['title'], locale))

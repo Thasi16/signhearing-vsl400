@@ -56,8 +56,9 @@ class SettingsChecks(unittest.TestCase):
             self.assertFalse(any(tag in ('form', 'script') or 'style' in attrs or any(key.startswith('on') for key in attrs) for tag, attrs in tags))
             self.assertIn('<noscript>', source)
             self.assertTrue(any('data-data-actions' in attrs and 'hidden' in attrs for _, attrs in tags))
-            self.assertTrue(any(attrs.get('class') == 'sh-badge sh-badge--sample' for _, attrs in tags))
-            self.assertTrue(any(tag == 'button' and 'disabled' in attrs for tag, attrs in tags))
+            self.assertNotIn(DICTIONARIES[locale]['settings.about.materials'], source)
+            self.assertNotIn(DICTIONARIES[locale]['settings.about.sample'], source)
+            self.assertNotIn('settings-account', source)
             self.assertNotIn('shell.stub', source)
 
     def test_translated_status_is_escaped(self):

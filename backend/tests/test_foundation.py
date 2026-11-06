@@ -88,6 +88,7 @@ def test_database_configuration_rejects_unintended_backends():
         "/app/review/quiz/1",
         "/app/progress",
         "/app/settings",
+        "/app/account",
     ],
 )
 def test_existing_learning_routes(client, route, locale):
@@ -111,6 +112,24 @@ def test_language_cookie_and_missing_page(client):
     missing = client.get("/app/lessons/999")
     assert missing.status_code == 404
     assert '<html lang="en">' in missing.text
+
+
+@pytest.mark.parametrize("locale", ["vi", "en"])
+def test_merged_demo_login_uses_the_existing_origin(client, locale):
+    response = client.get(f"/login?lang={locale}&next=%2Fapp%2Faccount")
+    assert response.status_code == 200
+    assert response.headers["content-language"] == locale
+    assert 'id="login-form"' in response.text
+    assert 'id="login-username"' in response.text
+    assert 'id="login-password"' in response.text
+    assert "/static/login.js" in response.text
+    assert "{{" not in response.text
+    head = client.head(f"/login?lang={locale}")
+    assert head.status_code == 200
+    assert not head.content
+    assert head.headers["content-length"] == str(len(response.content))
+    assert client.get("/static/login.js").status_code == 200
+    assert client.get("/static/login.css").status_code == 200
 
 
 def test_static_paths_and_video_ranges(client):

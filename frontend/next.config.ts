@@ -8,6 +8,7 @@ const config: NextConfig = {
     const backend = process.env.BACKEND_URL || "http://127.0.0.1:8001";
     return {
       beforeFiles: [
+        { source: "/login", destination: `${backend}/login` },
         { source: "/app/:path*", destination: `${backend}/app/:path*` },
         { source: "/static/:path*", destination: `${backend}/static/:path*` },
         { source: "/api/:path*", destination: `${backend}/api/:path*` },

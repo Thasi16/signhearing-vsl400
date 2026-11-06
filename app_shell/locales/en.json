@@ -4,7 +4,11 @@
   "shell.crumb.label": "You are here",
   "shell.crumb.root": "Learning area",
   "shell.sidebar.note": "A little every day. Progress is saved in this browser.",
-  "shell.notice.sample": "Sample content is on for UI development — not reviewed learning material.",
+  "shell.sidebar.collapse": "Hide navigation sidebar",
+  "shell.sidebar.expand": "Show navigation sidebar",
+  "shell.account.open": "Open Premium account",
+  "shell.logout": "Sign out",
+  "shell.notice.sample": "Sample content is enabled.",
   "shell.stub.eyebrow": "MODULE UNDER CONSTRUCTION",
   "shell.stub.title": "This section has not been built yet.",
   "shell.stub.body": "The page frame, route and data are ready. The owner only needs to work inside this module's folder.",
@@ -16,6 +20,6 @@
   "shell.state.completed": "Completed",
   "shell.badge.sample": "Sample",
   "shell.badge.planned": "In preparation",
-  "shell.video.missing": "No reviewed reference video for this sign yet.",
+  "shell.video.missing": "The video for this sign is being updated.",
   "shell.storage.unavailable": "This browser blocks saving data. Progress will be lost on reload."
 }

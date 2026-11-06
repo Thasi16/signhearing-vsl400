@@ -16,6 +16,8 @@ from serve import page_context, render_page  # noqa: E402
 
 
 def render(locale: str, path: str) -> tuple[str, int]:
+    if path == "/login":
+        return render_page(locale, "/login", "login").decode("utf-8"), 200
     if app_modules.is_app_path(path):
         try:
             return app_modules.render(

@@ -4,7 +4,11 @@
   "shell.crumb.label": "Vị trí hiện tại",
   "shell.crumb.root": "Khu học tập",
   "shell.sidebar.note": "Học từng chút mỗi ngày. Tiến độ được lưu trên trình duyệt này.",
-  "shell.notice.sample": "Đang bật nội dung mẫu để dựng giao diện — chưa phải học liệu đã duyệt.",
+  "shell.sidebar.collapse": "Ẩn thanh điều hướng",
+  "shell.sidebar.expand": "Hiện thanh điều hướng",
+  "shell.account.open": "Mở tài khoản Premium",
+  "shell.logout": "Đăng xuất",
+  "shell.notice.sample": "Nội dung mẫu đang được bật.",
   "shell.stub.eyebrow": "MODULE ĐANG XÂY DỰNG",
   "shell.stub.title": "Phần này chưa được dựng giao diện.",
   "shell.stub.body": "Khung trang, đường dẫn và dữ liệu đã sẵn sàng. Người phụ trách chỉ cần làm việc trong thư mục của module này.",
@@ -16,6 +20,6 @@
   "shell.state.completed": "Hoàn thành",
   "shell.badge.sample": "Mẫu",
   "shell.badge.planned": "Đang biên soạn",
-  "shell.video.missing": "Chưa có video mẫu đã duyệt cho ký hiệu này.",
+  "shell.video.missing": "Video cho ký hiệu này đang được cập nhật.",
   "shell.storage.unavailable": "Trình duyệt không cho lưu dữ liệu. Tiến độ sẽ mất khi tải lại trang."
 }

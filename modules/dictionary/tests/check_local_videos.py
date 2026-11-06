@@ -61,7 +61,7 @@ def main():
         for locale in ('vi', 'en'):
             with fetch('/app/signs/' + sign['slug'] + '?lang=' + locale) as response:
                 page = response.read().decode('utf-8')
-                check(response.status == 200 and f'src="{video_path}"' in page and 'dictionary-video-notice' in page, 'SSR media and review notice')
+                check(response.status == 200 and f'src="{video_path}"' in page and 'dictionary-video-notice' not in page, 'SSR media without review warning')
         print('PASS preserved original, H.264 video, SSR and byte ranges:', sign['slug'])
     for path in ('/static/media/local-videos/%2e%2e/%2e%2e/%2e%2e/serve.py', '/data/curriculum.json', '/app/signs/khong-co'):
         with fetch(path) as response:

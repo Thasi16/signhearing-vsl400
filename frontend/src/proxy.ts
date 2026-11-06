@@ -14,7 +14,11 @@ export function proxy(request: NextRequest) {
   // Public header links never interpolate an unknown user-supplied path.
   requestHeaders.set(
     "x-sh-page",
-    request.nextUrl.pathname === "/" ? "/" : "/404",
+    request.nextUrl.pathname === "/"
+      ? "/"
+      : /^\/features\/?$/.test(request.nextUrl.pathname)
+        ? "/features"
+        : "/404",
   );
   let response: NextResponse;
   if (/^\/khu-hoc-tap\/?$/.test(request.nextUrl.pathname)) {
