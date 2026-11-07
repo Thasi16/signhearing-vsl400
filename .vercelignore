@@ -1,0 +1,11 @@
+.git/
+.checkouts/
+.publish/
+.tools/
+.venv/
+.vercel/
+__pycache__/
+**/__pycache__/
+*.pyc
+**/*.pyc
+vercel-setup.zip
