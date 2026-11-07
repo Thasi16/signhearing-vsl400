@@ -39,7 +39,7 @@ class ReviewChecks(unittest.TestCase):
         self.assertEqual({key for key in DICTIONARIES['vi'] if key.startswith('review.')},
                          {key for key in DICTIONARIES['en'] if key.startswith('review.')})
         for locale in ('vi', 'en'):
-            for identifier in (None, '1', '2'):
+            for identifier in (None, 'video', '1', '2'):
                 values = VIEW.context(request(locale, identifier))
                 self.assertTrue(all(key.startswith('review.') for key in values))
                 template = 'quiz.html' if identifier else 'page.html'
@@ -56,7 +56,8 @@ class ReviewChecks(unittest.TestCase):
         values = VIEW.context(request())
         tags = Markup(values['review.lessons.html']).tags
         ids = {attrs['data-lesson-id'] for tag, attrs in tags if 'data-lesson-id' in attrs}
-        expected = {str(lesson['id']) for lesson in content.open_lessons() if len(content.signs(lesson['id'])) >= 2}
+        expected = {'video'} | {str(lesson['id']) for lesson in content.open_lessons()
+                              if len([sign for sign in content.signs(lesson['id']) if sign.get('video')]) >= 2}
         self.assertEqual(expected, ids)
         self.assertNotIn('/quiz/3', values['review.lessons.html'])
         self.assertNotIn('/quiz/None', values['review.lessons.html'])
@@ -74,19 +75,22 @@ class ReviewChecks(unittest.TestCase):
     def test_untrusted_content_escaped(self):
         malicious = '<img src=x onerror="bad()"> & \'quoted\''
         lesson = dict(content.lesson(1), title={'vi': malicious, 'en': malicious})
-        signs = [dict(sign, word={'vi': malicious, 'en': malicious}, meaning={'vi': malicious, 'en': malicious}) for sign in content.signs(1)]
+        signs = [dict(sign, word={'vi': malicious, 'en': malicious}, meaning={'vi': malicious, 'en': malicious})
+                 for sign in content.signs() if sign.get('video')]
         listing = VIEW.context(request(open_lessons=lambda: [lesson], signs=lambda *_: signs))
-        detail = VIEW.context(request(identifier='1', lesson=lambda _: lesson, signs=lambda *_: signs))
+        detail = VIEW.context(request(identifier='video', signs=lambda *_: signs))
         for value in (listing['review.lessons.html'], listing['review.lesson_options.html'], detail['review.reading.html']):
             self.assertNotIn(malicious, value)
             self.assertIn(html.escape(malicious, quote=True), value)
 
     def test_no_js_reading_and_sample_metadata(self):
-        values = VIEW.context(request(identifier='1'))
-        for sign in content.signs(1):
+        values = VIEW.context(request(identifier='video'))
+        for sign in content.signs():
+            if not sign.get('video'):
+                continue
             self.assertIn(content.text(sign['word'], 'en'), values['review.reading.html'])
             self.assertIn(sign['slug'], values['review.sample_slugs'].split(','))
-        self.assertIn('sh-badge--sample', values['review.sample.html'])
+        self.assertEqual('', values['review.sample.html'])
         self.assertIn('<noscript>', (ROOT / 'modules/review/page.html').read_text(encoding='utf-8'))
         self.assertIn('<noscript>', (ROOT / 'modules/review/quiz.html').read_text(encoding='utf-8'))
 

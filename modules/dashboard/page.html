@@ -5,12 +5,17 @@
   </div>
   <div class="dashboard-start">
     <section class="sh-card dashboard-welcome" aria-labelledby="dashboard-welcome-title">
-      <div>
+      <div class="dashboard-welcome-copy">
         <p class="sh-eyebrow">{{dashboard.welcome.eyebrow}}</p>
         <h2 id="dashboard-welcome-title" data-welcome>{{dashboard.welcome.new}}</h2>
         <p data-welcome-note>{{dashboard.welcome.new.note}}</p>
+        <nav class="dashboard-welcome-links" aria-label="{{dashboard.shortcuts.title}}">{{dashboard.welcome.links.html}}</nav>
       </div>
-      <img src="/static/assets/mascot.png" width="1351" height="1164" alt="">
+      <div class="dashboard-welcome-art" aria-hidden="true">
+        <span class="dashboard-welcome-orbit"></span>
+        <span class="dashboard-welcome-spark">✦</span>
+        <img src="/static/assets/mascot.png" width="1351" height="1164" alt="">
+      </div>
     </section>
     {{dashboard.resume.html}}
   </div>

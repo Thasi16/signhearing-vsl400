@@ -1,7 +1,8 @@
 """Progressive migration adapter: reuse the team's existing modules without rewriting them.
 
 No new learning API or database model is introduced. This module calls pure rendering
-functions; importing serve does not start its HTTP server.
+functions; importing serve does not start its HTTP server. Page contexts refresh changed
+translation files before rendering templates from the shared app shell.
 """
 
 import sys

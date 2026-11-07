@@ -40,8 +40,21 @@
   </section>
 </main>
 <div class="login-transition" data-login-transition aria-hidden="true">
-  <div class="login-transition-trail"></div>
+  <div class="login-transition-sky" aria-hidden="true">
+    <span class="login-transition-orbit login-transition-orbit--one"></span>
+    <span class="login-transition-orbit login-transition-orbit--two"></span>
+    <span class="login-transition-spark login-transition-spark--one">✦</span>
+    <span class="login-transition-spark login-transition-spark--two">✦</span>
+    <span class="login-transition-spark login-transition-spark--three">✦</span>
+  </div>
+  <div class="login-transition-portal" aria-hidden="true"><span></span><span></span></div>
+  <div class="login-transition-trail" aria-hidden="true"></div>
   <img class="login-transition-mascot" src="/static/assets/mascot.png" alt="" width="1351" height="1164">
-  <p>{{login.transition}}</p>
+  <div class="login-transition-welcome">
+    <span class="login-transition-check" aria-hidden="true">✓</span>
+    <p>{{login.transition}}</p>
+    <strong data-transition-user></strong>
+    <span class="login-transition-loading" aria-hidden="true"><i></i><i></i><i></i></span>
+  </div>
 </div>
 </body></html>

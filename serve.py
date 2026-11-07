@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import app_modules
-from i18n import DICTIONARIES, LOCALES, ROOT, format_number, render_file
+from i18n import DICTIONARIES, LOCALES, ROOT, format_number, refresh_locales, render_file
 
 STATIC = ROOT / 'static'
 RAW = {'layout.head', 'layout.header', 'layout.footer', 'layout.languages', 'layout.contact', 'translation.jordan', 'translation.keller', 'state.vi', 'state.en'}
@@ -23,6 +23,7 @@ if CONTACT:
 
 
 def page_context(locale, path, kind):
+    refresh_locales()
     values = dict(DICTIONARIES[locale])
     values.update({
         'locale': locale,

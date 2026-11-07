@@ -108,7 +108,7 @@ def _nav(locale, active_id):
         label = html.escape(DICTIONARIES[locale][m['nav']['label_key']])
         href = html.escape(m['routes'][0]['path'] + '?lang=' + locale)
         status = '' if m.get('status') == 'done' else '<span class="sh-nav-dot" aria-hidden="true"></span>'
-        links.append(f'<a href="{href}"{current}>{icon(m["nav"]["icon"])}<span>{label}</span>{status}</a>')
+        links.append(f'<a href="{href}" data-tour="{m["id"]}"{current}>{icon(m["nav"]["icon"])}<span>{label}</span>{status}</a>')
     return ''.join(links)
 
 
@@ -162,6 +162,8 @@ def render(locale, path, base_values):
     assets.append('<script src="/static/app/core.js" defer></script>')
     if meta['has_js']:
         assets.append(f'<script src="/static/m/{meta["id"]}/script.js" defer></script>')
+    assets.append('<link rel="stylesheet" href="/static/app/onboarding.css">')
+    assets.append('<script src="/static/app/onboarding.js" defer></script>')
     values['shell.assets.html'] = ''.join(assets)
     values['layout.head'] = render_file('app_shell/head.html', values, raw | {'shell.assets.html'})
 

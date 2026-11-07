@@ -31,12 +31,12 @@
   "dictionary.favorite.mark": "★ Favorite",
   "dictionary.related.title": "Other signs in this lesson",
   "dictionary.related.empty": "There are no other available signs in this lesson yet.",
-  "dictionary.collection.name": "Your video collection",
-  "dictionary.collection.filter": "Your video collection",
-  "dictionary.collection.label": "Collection",
+  "dictionary.collection.name": "Signs with video",
+  "dictionary.collection.filter": "Signs with video",
+  "dictionary.collection.label": "Library",
   "dictionary.collection.summary": "Added {n} words with videos from your folder. Select “Your video collection” to view them separately.",
   "dictionary.collection.notice": "Video from your collection.",
-  "dictionary.collection.unassigned": "Not yet mapped to a lesson in the syllabus.",
+  "dictionary.collection.unassigned": "Sign library",
   "dictionary.collection.related": "Other words in this video collection",
   "dictionary.video.imported": "Video available"
 }

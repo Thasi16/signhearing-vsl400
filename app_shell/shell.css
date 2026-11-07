@@ -30,10 +30,17 @@
 .sh-icon{width:20px;height:20px;flex-shrink:0;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:#7a93b2}
 .sh-nav-dot{width:6px;height:6px;margin-left:auto;border-radius:50%;background:#e98aaa;box-shadow:0 0 0 3px #fff0f5}
 .app-nav a[aria-current="page"] .sh-nav-dot{display:none}
-.app-sidebar-foot{position:relative;margin-top:auto;display:grid;gap:8px;justify-items:center;text-align:center;padding:18px 12px 15px;border:1px solid #cfe1f3;border-radius:20px;background:linear-gradient(155deg,#e8f3ff 8%,#fff 58%,#fff0f5);box-shadow:0 12px 28px #174f8c12;overflow:visible}
-.app-sidebar-foot::before{content:'';position:absolute;inset:7px;border:1px dashed #c7dcf1;border-radius:15px;pointer-events:none}
-.app-sidebar-foot img{position:relative;width:88px;height:auto;margin-top:-8px;filter:drop-shadow(0 7px 8px #2678ed22);animation:sidebar-mascot-float 3.2s ease-in-out infinite}
-.app-sidebar-foot p{font-size:12px;line-height:1.55;color:#56708f}
+.app-sidebar-foot{position:relative;margin-top:auto;display:grid;gap:12px;padding:18px 16px 16px;border:1px solid #c9def4;border-radius:20px;background:radial-gradient(circle at 100% 0,#ffe6ef 0,transparent 42%),linear-gradient(145deg,#edf6ff,#fff 72%);box-shadow:0 12px 28px #174f8c12;overflow:hidden;text-align:left}
+.app-sidebar-foot::before{content:'✦';position:absolute;right:14px;top:10px;color:#e67da3;font-size:17px;text-shadow:0 0 14px #ed93b3}
+.app-motivation-head{display:flex;align-items:center;gap:10px;padding-right:18px}
+.app-motivation-head strong{color:#123f70;font-size:13px;line-height:1.45;letter-spacing:-.01em}
+.app-motivation-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:13px;background:linear-gradient(145deg,#3f91f2,#256fd2);box-shadow:0 8px 17px #2678ed35;color:#fff}
+.app-motivation-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.app-sidebar-foot p{font-size:11px;line-height:1.65;color:#597493}
+.app-motivation-path{display:flex;align-items:flex-end;gap:5px;height:22px;padding:0 3px}
+.app-motivation-path i{display:block;flex:1;height:5px;border-radius:999px;background:#cfe3f8}
+.app-motivation-path i:nth-child(2){height:8px;background:#a9cef5}.app-motivation-path i:nth-child(3){height:12px;background:#78afea}.app-motivation-path i:nth-child(4){height:16px;background:linear-gradient(#ea8daf,#428ee8)}
+.app-motivation-path span{align-self:flex-start;margin-left:2px;color:#e779a1;font-size:16px;animation:motivation-spark 1.8s ease-in-out infinite}
 
 /* Main column */
 .app-column{display:flex;flex-direction:column;min-width:0}
@@ -83,6 +90,7 @@
 .sh-grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
 .sh-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;line-height:1.5;white-space:nowrap;background:#eef3f9;color:#4d6888}
 .sh-badge--sample{background:#fff1f6;color:#a2406b}
+.sh-badge--sample,.sh-notice-sample{display:none!important}
 .sh-badge--planned{background:#eef3f9;color:#60758e}
 .sh-badge--progress{background:#e9f3ff;color:#245f9f}
 .sh-badge--done{background:#e4efff;color:#174f91}
@@ -137,7 +145,7 @@
   .app-logout{width:38px;padding:0;justify-content:center}
   .app-logout span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 }
-@keyframes sidebar-mascot-float{50%{transform:translateY(-5px) rotate(1deg)}}
+@keyframes motivation-spark{50%{transform:translateY(-3px) scale(1.12);filter:drop-shadow(0 0 5px #ea88aa)}}
 @keyframes premium-text-shine{to{background-position:220% center}}
 @keyframes premium-avatar-glow{50%{border-color:#e98aaa;box-shadow:0 0 0 4px #fff0f5,0 0 20px #7db4ff88}}
-@media(prefers-reduced-motion:reduce){.sh-progress>span{transition:none}.app-account-tier,.app-account-avatar,.app-sidebar-foot img{animation:none}.app-nav a:hover,.app-brand:hover{transform:none}}
+@media(prefers-reduced-motion:reduce){.sh-progress>span{transition:none}.app-account-tier,.app-account-avatar,.app-motivation-path span{animation:none}.app-nav a:hover,.app-brand:hover{transform:none}}

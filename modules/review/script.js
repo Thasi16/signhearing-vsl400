@@ -38,7 +38,7 @@
     catch (error) { return null; }
   }
 
-  function showMedia(container, sign, onMissing) {
+  function showMedia(container, sign, onMissing, autoplay) {
     stopMedia(container);
     container.replaceChildren();
     function placeholder() {
@@ -56,6 +56,8 @@
     video.volume = 0;
     video.playsInline = true;
     video.preload = 'metadata';
+    video.autoplay = Boolean(autoplay);
+    video.loop = Boolean(autoplay);
     video.setAttribute('aria-label', SH.t('review.video.label'));
     video.addEventListener('volumechange', () => {
       if (!video.muted) video.muted = true;
@@ -68,6 +70,7 @@
       onMissing();
     });
     container.appendChild(video);
+    if (autoplay) video.play().catch(() => { /* controls remain available when autoplay is blocked */ });
     return true;
   }
 
@@ -198,6 +201,7 @@
   if (quiz) {
     const find = (selector) => quiz.querySelector(selector);
     const id = quiz.dataset.lessonId;
+    const videoMode = quiz.dataset.quizMode === 'video';
     let questions = [];
     let position = 0;
     let score = 0;
@@ -213,16 +217,11 @@
       for (const other of same.concat(outside)) {
         const key = wordKey(other.word);
         if (!key || used.has(key)) continue;
-        if (!safeVideo(sign.video) && wordKey(other.meaning) === wordKey(sign.meaning)) continue;
         used.add(key);
         options.push(other);
         if (options.length === 4) break;
       }
       return shuffle(options);
-    }
-
-    function textQuestion(sign) {
-      return SH.t('review.quiz.text_question', { meaning: sign.meaning });
     }
 
     function paintQuestion(focus) {
@@ -242,11 +241,12 @@
       const media = find('[data-question-media]');
       stopMedia(media);
       media.replaceChildren();
-      media.hidden = !safeVideo(current.sign.video);
-      find('[data-question]').textContent = media.hidden ? textQuestion(current.sign) : SH.t('review.quiz.video_question');
-      if (!media.hidden) showMedia(media, current.sign, () => {
-        find('[data-question]').textContent = textQuestion(current.sign);
-      });
+      media.hidden = false;
+      find('[data-question]').textContent = SH.t('review.quiz.video_question');
+      showMedia(media, current.sign, () => {
+        find('[data-question]').textContent = SH.t('review.quiz.video_unavailable');
+        find('[data-options]').querySelectorAll('button').forEach((button) => { button.disabled = true; });
+      }, true);
       const options = find('[data-options]');
       options.replaceChildren();
       current.options.forEach((sign, index) => {
@@ -303,13 +303,16 @@
       const total = questions.length;
       const passed = score / total >= 0.8;
       SH.store.addQuizResult(id, score, total);
-      if (passed) SH.store.setLessonState(id, 'completed');
+      if (passed && !videoMode) SH.store.setLessonState(id, 'completed');
       stopMedia(find('[data-question-media]'));
       find('[data-question-card]').hidden = true;
       find('[data-result]').hidden = false;
       find('[data-result-mascot]').hidden = !passed;
       find('[data-result-score]').textContent = SH.t('review.result.score', { score, total, percent: Math.round(100 * score / total) });
-      find('[data-result-message]').textContent = SH.t(passed ? 'review.result.passed' : 'review.result.again');
+      const resultKey = videoMode
+        ? (passed ? 'review.video_quiz.result.passed' : 'review.video_quiz.result.again')
+        : (passed ? 'review.result.passed' : 'review.result.again');
+      find('[data-result-message]').textContent = SH.t(resultKey);
       const list = find('[data-mistake-list]');
       list.replaceChildren();
       mistakes.forEach((sign) => {
@@ -327,7 +330,9 @@
     }
 
     function restart(focus) {
-      const signs = SH.signsOf(id);
+      const signs = videoMode
+        ? SH.data.signs.filter((sign) => safeVideo(sign.video))
+        : SH.signsOf(id).filter((sign) => safeVideo(sign.video));
       questions = shuffle(signs).map((sign) => ({ sign, options: optionsFor(sign, signs) }));
       position = 0;
       score = 0;
