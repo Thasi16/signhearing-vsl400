@@ -13,9 +13,8 @@
 .app-page .app-nav a[aria-current="page"]{background:#082953;color:#fff;box-shadow:0 5px 15px #08295315}
 .app-page .app-nav a[aria-current="page"] .sh-icon{color:#b7d9ff}
 .app-page .app-nav a span{position:static;width:auto;height:auto;clip:auto;overflow:visible}
-.app-page .app-sidebar-foot{border:1px solid #e0ebf8;background:linear-gradient(155deg,#edf7ff,#fdf0f5);border-radius:22px;padding:23px 15px;gap:13px}
-.app-page .app-sidebar-foot img{width:90px;height:auto}
-.app-page .app-sidebar-foot p{font-size:12px;color:#45607f;line-height:1.8}
+.app-page .app-sidebar-foot{border:1px solid #d3e4f5;background:radial-gradient(circle at 100% 0,#ffe7f0 0,transparent 43%),linear-gradient(150deg,#edf7ff,#fff 74%);border-radius:22px;padding:19px 16px 16px;gap:12px}
+.app-page .app-sidebar-foot p{font-size:11px;color:#526f90;line-height:1.7}
 .app-page .app-topbar{min-height:84px;padding-inline:44px;gap:20px;border-color:#e4edf7;background:#ffffffef}
 .app-page .app-crumbs{font-size:12px;flex-wrap:wrap;line-height:1.6}
 .app-page .app-topbar-actions{gap:20px}

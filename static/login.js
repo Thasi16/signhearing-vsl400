@@ -6,6 +6,7 @@
   const form = document.getElementById('login-form');
   const transition = document.querySelector('[data-login-transition]');
   const mascot = transition && transition.querySelector('.login-transition-mascot');
+  const transitionUser = transition && transition.querySelector('[data-transition-user]');
   const error = form && form.querySelector('[data-login-error]');
   if (!form || !transition || !mascot || !error) return;
 
@@ -52,8 +53,15 @@
     document.cookie = 'signhearing_demo_user=' + encodeURIComponent(username.slice(0, 80)) + '; Path=/; Max-Age=31536000; SameSite=Lax';
 
     Array.from(form.elements).forEach(control => { control.disabled = true; });
+    if (transitionUser) {
+      const safeUsername = username.slice(0, 80);
+      transitionUser.textContent = locale === 'vi'
+        ? 'Xin chào, ' + safeUsername + '!'
+        : 'Welcome, ' + safeUsername + '!';
+    }
     transition.setAttribute('aria-hidden', 'false');
     document.body.classList.add('is-authenticating');
+    window.setTimeout(() => document.body.classList.add('is-auth-welcoming'), 1150);
 
     let finished = false;
     const finish = () => {
@@ -63,6 +71,6 @@
     };
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     mascot.addEventListener('animationend', finish, {once:true});
-    window.setTimeout(finish, reduced ? 550 : 2600);
+    window.setTimeout(finish, reduced ? 700 : 3200);
   });
 })();

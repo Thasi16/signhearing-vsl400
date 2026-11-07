@@ -31,12 +31,12 @@
   "dictionary.favorite.mark": "★ Yêu thích",
   "dictionary.related.title": "Ký hiệu khác trong bài",
   "dictionary.related.empty": "Chưa có ký hiệu khác đang mở trong bài này.",
-  "dictionary.collection.name": "Bộ video của bạn",
-  "dictionary.collection.filter": "Bộ video của bạn",
-  "dictionary.collection.label": "Bộ sưu tập",
+  "dictionary.collection.name": "Ký hiệu có video",
+  "dictionary.collection.filter": "Ký hiệu có video",
+  "dictionary.collection.label": "Thư viện",
   "dictionary.collection.summary": "Đã thêm {n} từ có video từ thư mục bạn cung cấp. Chọn “Bộ video của bạn” để xem riêng.",
   "dictionary.collection.notice": "Video trong bộ sưu tập của bạn.",
-  "dictionary.collection.unassigned": "Chưa đối chiếu với bài học trong giáo trình.",
+  "dictionary.collection.unassigned": "Thư viện ký hiệu",
   "dictionary.collection.related": "Từ khác trong bộ video",
   "dictionary.video.imported": "Có video"
 }

@@ -51,11 +51,11 @@ class SettingsChecks(unittest.TestCase):
             self.assertEqual(len(ids), len(set(ids)))
             self.assertEqual(1, sum(tag == 'h1' for tag, _ in tags))
             anchors = [attrs['href'][1:] for tag, attrs in tags if tag == 'a' and attrs['href'].startswith('#')]
-            self.assertEqual(['ngon-ngu', 'du-lieu', 'camera', 'gioi-thieu'], anchors)
+            self.assertEqual(['ngon-ngu', 'camera'], anchors)
             self.assertTrue(all(anchor in ids for anchor in anchors))
             self.assertFalse(any(tag in ('form', 'script') or 'style' in attrs or any(key.startswith('on') for key in attrs) for tag, attrs in tags))
-            self.assertIn('<noscript>', source)
-            self.assertTrue(any('data-data-actions' in attrs and 'hidden' in attrs for _, attrs in tags))
+            self.assertNotIn('id="du-lieu"', source)
+            self.assertFalse(any('data-data-actions' in attrs or 'data-summary' in attrs for _, attrs in tags))
             self.assertNotIn(DICTIONARIES[locale]['settings.about.materials'], source)
             self.assertNotIn(DICTIONARIES[locale]['settings.about.sample'], source)
             self.assertNotIn('settings-account', source)
@@ -63,16 +63,16 @@ class SettingsChecks(unittest.TestCase):
 
     def test_translated_status_is_escaped(self):
         malicious = '<img src=x onerror="bad()"> & test'
-        _, source, tags = rendered('en', **{'settings.language.current': malicious, 'settings.confirm.note': malicious})
+        _, source, tags = rendered('en', **{'settings.language.current': malicious, 'settings.camera.note': malicious})
         self.assertNotIn(malicious, source)
         self.assertIn('&lt;img src=x onerror=&quot;bad()&quot;&gt; &amp; test', source)
         self.assertFalse(any(tag == 'img' for tag, _ in tags))
 
     def test_data_and_camera_api_boundaries(self):
         script = (ROOT / 'modules/settings/script.js').read_text(encoding='utf-8')
-        for forbidden in ('localStorage', 'sessionStorage', 'window.confirm', 'getUserMedia', 'MediaRecorder', 'fetch(', 'XMLHttpRequest', 'innerHTML', 'setLessonState(', 'markSignSeen(', 'addPractice(', 'addQuizResult('):
+        for forbidden in ('localStorage', 'sessionStorage', 'window.confirm', 'getUserMedia', 'MediaRecorder', 'fetch(', 'XMLHttpRequest', 'innerHTML', 'SH.store', 'setLessonState(', 'markSignSeen(', 'addPractice(', 'addQuizResult('):
             self.assertNotIn(forbidden, script)
-        for required in ('SH.store.reset()', 'SH.store.export()', 'SH.store.summary()', 'SH.store.persistent()', 'URL.revokeObjectURL', "window.addEventListener('sh:store', paint)"):
+        for required in ("navigator.permissions.query({name:'camera'})", "permissionStatus.addEventListener('change', paintPermission)"):
             self.assertIn(required, script)
 
 

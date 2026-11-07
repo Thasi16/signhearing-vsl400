@@ -20,22 +20,25 @@ def context(request):
     def card(sign):
         lesson = c.lesson(sign['lesson'])
         module = c.module(lesson['module']) if lesson else None
+        local = sign.get('collection') == 'local-videos'
         # Keep both languages in the index regardless of the displayed language.
         search = c.normalize(' '.join(c.text(sign[field], language)
                                      for field in ('word', 'meaning') for language in ('vi', 'en')))
         caption = (t['dictionary.card.context'].replace('{n}', str(lesson['id'])).replace('{module}', c.text(module['title'], locale))
                    if lesson else t['dictionary.collection.name'])
-        media_label = (t['dictionary.video.imported'] if sign.get('collection') == 'local-videos'
+        media_label = (t['dictionary.video.imported'] if local
                        else t['dictionary.video.available']) if video_source(sign) else t['dictionary.video.missing']
         module_id = module['id'] if module else 'local'
+        meaning = ('' if local else
+                   f'<p class="dictionary-card-meaning">{esc(c.text(sign["meaning"], locale))}</p>')
+        context = '' if local else f'<p class="dictionary-card-context">{esc(caption)}</p>'
         return (
             f'<li class="dictionary-item" data-slug="{esc(sign["slug"])}" data-module="{esc(module_id)}" data-search="{esc(search)}">'
             f'<a class="sh-card dictionary-card" href="{esc(request.url("/app/signs/" + sign["slug"]))}">'
             f'<span class="dictionary-card-badges">{sample(sign)}'
             f'<span class="sh-badge dictionary-favorite-mark" data-favorite-mark hidden>{esc(t["dictionary.favorite.mark"])}</span></span>'
             f'<h2>{esc(c.text(sign["word"], locale))}</h2>'
-            f'<p class="dictionary-card-meaning">{esc(c.text(sign["meaning"], locale))}</p>'
-            f'<p class="dictionary-card-context">{esc(caption)}</p>'
+            f'{meaning}{context}'
             f'<span class="dictionary-card-video">{esc(media_label)}</span>'
             '</a></li>')
 
@@ -95,6 +98,8 @@ def context(request):
         'dictionary.heading': c.text(sign['word'], locale),
         'dictionary.slug': slug,
         'dictionary.meaning': c.text(sign['meaning'], locale),
+        'dictionary.meaning.html': ('' if local else '<p class="sh-lead">'
+                                    + esc(c.text(sign['meaning'], locale)) + '</p>'),
         'dictionary.sample.html': sample(sign),
         'dictionary.media.html': video,
         'dictionary.lesson.html': lesson_link,

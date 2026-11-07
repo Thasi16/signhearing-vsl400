@@ -32,6 +32,12 @@
 .m-review .review-lesson h3{font-size:17px;color:var(--navy);line-height:1.5}
 .m-review .review-lesson>p{font-size:13px;color:var(--muted)}
 .m-review .review-lesson .button{justify-self:start;font-size:13px;padding:10px 16px;min-height:42px}
+.m-review .review-video-quiz{position:relative;isolation:isolate;overflow:hidden;border-color:#9bc9fa;background:linear-gradient(135deg,#eaf5ff 0%,#fff 55%,#fff0f6 100%);box-shadow:0 16px 36px #2678ed18}
+.m-review .review-video-quiz::after{content:'';position:absolute;z-index:-1;width:150px;aspect-ratio:1;right:-65px;bottom:-80px;border-radius:50%;background:#ffdce9;filter:blur(2px)}
+.m-review .review-video-quiz-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,#2f83f5,#246ad0);box-shadow:0 10px 22px #2678ed35;color:#fff}
+.m-review .review-video-quiz-icon span{transform:translateX(2px);font-size:17px}
+.m-review .review-video-quiz-badge{padding:5px 9px;border:1px solid #f3b6cc;border-radius:999px;background:#fff1f6;color:#bd4771;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.m-review .review-video-quiz .button{border:0;background:linear-gradient(110deg,#2f83f5,#2e73d9 70%,#e4789e);box-shadow:0 10px 23px #2678ed25}
 .m-review .review-best{font-size:13px;color:#4f6a8a;line-height:1.7;margin-bottom:14px}
 .m-review .review-lesson .review-best{margin-bottom:0}
 .m-review .review-quiz{max-width:880px}
@@ -39,7 +45,9 @@
 .m-review .review-quiz-rule{padding:14px 18px;background:#edf5ff;border:1px solid var(--line);border-radius:12px;margin-bottom:20px}
 .m-review .review-question-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;font-size:13px;color:var(--muted)}
 .m-review .review-question-card>h2{font-size:23px;line-height:1.6;color:var(--navy);margin:24px 0;scroll-margin-top:92px;overflow-wrap:anywhere}
-.m-review .review-question-media{max-width:600px;margin:0 auto 22px}
+.m-review .review-question-media{position:relative;max-width:620px;margin:0 auto 22px;padding:7px;border:1px solid #b8d9fa;border-radius:18px;background:linear-gradient(135deg,#e8f4ff,#fff3f8);box-shadow:0 16px 34px #174f8c16}
+.m-review .review-question-media::before{content:'VIDEO';position:absolute;z-index:2;left:17px;top:17px;padding:5px 8px;border-radius:999px;background:#0b315ccc;color:#fff;font-size:9px;font-weight:800;letter-spacing:.14em;backdrop-filter:blur(5px)}
+.m-review .review-question-media video{border-radius:12px}
 .m-review .review-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .m-review .review-option{display:flex;align-items:center;flex-wrap:wrap;gap:12px;padding:16px;border:1px solid #b8cfe8;border-radius:14px;background:#fff;color:var(--navy);font:inherit;text-align:left;cursor:pointer;min-height:66px;overflow-wrap:anywhere}
 .m-review .review-option:hover:not(:disabled){border-color:var(--blue);background:#f3f8ff}

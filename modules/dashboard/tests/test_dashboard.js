@@ -37,8 +37,8 @@ function start(locale, noOpen = false) {
     ...JSON.parse(read('modules/dashboard/locales/' + locale + '.json')) };
   const nodes = new Map();
   const selectors = ['[data-welcome]', '[data-welcome-note]', '[data-resume-state]', '[data-resume-link]',
-    '[data-resume-progress]', '[data-resume-sample]', '[data-resume-title]', '[data-resume-note]',
-    '[data-resume-module]', '[data-resume-count]', '[data-resume-bar]', '[data-retry-list]',
+    '[data-resume-progress]', '[data-resume-sample]', '[data-resume-title]',
+    '[data-resume-module]', '[data-resume-note]', '[data-resume-count]', '[data-resume-bar]', '[data-retry-list]',
     '[data-retry-section]', '[data-favorites-list]', '[data-favorites-section]', '.dashboard-personal',
     '[data-stat="lessons"]', '[data-stat="signs"]', '[data-stat="practice"]', '[data-stat="quiz"]'];
   selectors.forEach((selector) => nodes.set(selector, new Element()));
@@ -51,9 +51,12 @@ function start(locale, noOpen = false) {
   };
   const listeners = new Map();
   const document = {
+    cookie: 'signhearing_demo_auth=1',
+    body: { classList: { add() {} } },
     documentElement: { lang: locale },
     getElementById: (id) => ({ textContent: JSON.stringify(id === 'sh-data' ? data : strings) }),
-    querySelector: () => root,
+    querySelector: (selector) => selector === '.m-dashboard .dashboard-page' ? root : null,
+    querySelectorAll: () => [],
     createElement: () => new Element(),
     addEventListener: () => {},
   };

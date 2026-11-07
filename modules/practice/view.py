@@ -15,7 +15,8 @@ def context(request):
             f'<li class="practice-choice" data-slug="{esc(sign["slug"])}">'
             f'<a class="sh-card practice-choice-link" href="{esc(request.url("/app/practice/" + sign["slug"]))}">'
             f'<span class="practice-choice-top"><strong>{esc(c.text(sign["word"], locale))}</strong>{badge(sign)}</span>'
-            f'<span class="practice-choice-meaning">{esc(c.text(sign["meaning"], locale))}</span>'
+            + ('' if sign.get('collection') == 'local-videos' else
+               f'<span class="practice-choice-meaning">{esc(c.text(sign["meaning"], locale))}</span>') +
             '<span class="practice-choice-count" data-practice-count hidden></span></a></li>'
             for sign in signs)
 

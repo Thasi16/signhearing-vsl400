@@ -7,8 +7,14 @@
     <a class="app-brand" href="{{url.home}}" aria-label="{{a11y.home}}"><img src="/static/assets/logo-horizontal.png" alt="{{site.name}}" width="2172" height="724"></a>
     <nav class="app-nav" aria-label="{{shell.nav.label}}">{{shell.nav.html}}</nav>
     <div class="app-sidebar-foot">
-      <img src="/static/assets/mascot.png" alt="" width="1351" height="1164" loading="lazy">
+      <div class="app-motivation-head">
+        <span class="app-motivation-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 17.5 10 12l3 3 6-8"></path><path d="M15 7h4v4"></path></svg>
+        </span>
+        <strong>{{shell.sidebar.motivation}}</strong>
+      </div>
       <p>{{shell.sidebar.note}}</p>
+      <div class="app-motivation-path" aria-hidden="true"><i></i><i></i><i></i><i></i><span>✦</span></div>
     </div>
   </aside>
   <div class="app-column">
@@ -31,6 +37,10 @@
       </div>
       <div class="app-topbar-actions">
         {{layout.languages}}
+        <button class="app-tour-start" type="button" data-tour-start aria-label="{{shell.tour.restart}}" title="{{shell.tour.restart}}" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M9.5 9a2.5 2.5 0 0 1 5 .4c0 1.7-2.5 2-2.5 3.6M12 16.5h.01"></path></svg>
+          <span>{{shell.tour.restart}}</span>
+        </button>
         <a class="back-link" href="{{url.home}}">← {{action.home}}</a>
         <a class="app-account-link" href="{{url.account}}" aria-label="{{shell.account.open}}" title="{{shell.account.open}}">
           <span class="app-account-tier">PREMIUM</span>
