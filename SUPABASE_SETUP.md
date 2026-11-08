@@ -1,6 +1,21 @@
-# Thiết lập Supabase cho SignHearing
+# Hướng dẫn setup Supabase cho SignHearing
 
-Code đã được tích hợp trong repository. **Chưa kết nối hoặc thay đổi Supabase production, chưa push GitHub và chưa deploy.** Không có credentials thực tế trong phiên làm việc này.
+Hướng dẫn cấu hình Supabase Auth và dữ liệu học tập cho dự án hiện tại: `frontend/` dùng Next.js, `backend/` dùng FastAPI, deployment dùng Vercel Services. Tài liệu này có thể đưa lên GitHub; mọi URL và key minh họa đều là **placeholder**, không phải credentials thật.
+
+Thực hiện theo thứ tự: chuẩn bị project → chạy SQL → bật Email Auth → điền biến môi trường → chạy local → kiểm tra → cấu hình Vercel khi cần. Tạo file `.env` hoặc chạy build thành công chưa chứng minh ứng dụng đã kết nối được Supabase; cần đăng ký, đăng nhập và lưu/đọc dữ liệu thật ở bước kiểm thử.
+
+## 0. Chuẩn bị và lấy thông tin Supabase
+
+Trên máy phát triển cần Node.js **22.x**, Python **3.12+**, npm và uv. Thực hiện các lệnh trong thư mục gốc của repository, nơi có `vercel.json`, `frontend/` và `backend/`.
+
+1. Đăng nhập [Supabase Dashboard](https://supabase.com/dashboard) và mở project muốn sử dụng. Nếu chưa có project, tạo project mới và chờ khởi tạo hoàn tất. Nên dùng project phát triển riêng khi thử ghi dữ liệu local.
+2. Lấy **Project URL** trong phần cấu hình API của project, ví dụ `https://YOUR_PROJECT.supabase.co`.
+3. Mở **Settings → API Keys** và lấy **Publishable key** bắt đầu bằng `sb_publishable_`. Tên/vị trí menu có thể thay đổi theo phiên bản Dashboard.
+4. Giữ hai giá trị này để điền vào hai file môi trường trên máy của bạn. Cả frontend và backend phải dùng cùng một project.
+
+Ứng dụng hiện tại chỉ cần Project URL và Publishable key. Nếu Supabase yêu cầu đặt database password khi tạo project, không đưa password đó vào cấu hình ứng dụng này. Không dùng Secret key, Service Role key hoặc legacy JWT key để thay cho Publishable key.
+
+Tham khảo: [Supabase API keys](https://supabase.com/docs/guides/getting-started/api-keys).
 
 ## 1. Chạy migration
 
@@ -11,7 +26,23 @@ Code đã được tích hợp trong repository. **Chưa kết nối hoặc thay
 
 Migration dùng UUID của `auth.users`, `timestamptz`, khóa duy nhất theo user/resource hoặc user/event UUID; không cần extension hoặc mật khẩu database. Trigger tạo profile khi đăng ký; tài khoản đã tồn tại cũng được bổ sung profile. Chạy lại migration này không xóa tiến độ, hồ sơ hoặc lịch sử.
 
-Repository trước thay đổi chỉ có Alembic foundation rỗng; không tìm thấy schema nghiệp vụ Supabase được cung cấp. Migration này là schema tương ứng với curriculum và module thực tế trong repo. Nếu project của bạn đã có bảng cùng tên với cấu trúc khác, hãy đối chiếu/sao lưu trước. Migration sẽ rollback khi cấu trúc không tương thích hoặc phát hiện policy khác có thể mở quyền; không xóa policy/bảng cũ để ép chạy. Gửi schema thực tế để lập migration bổ sung nếu gặp trường hợp này. Không dùng `DROP TABLE` hay reset project.
+Migration này tương ứng với curriculum và module thực tế trong repository. Nếu project đã có bảng cùng tên với cấu trúc khác, hãy đối chiếu/sao lưu trước. Migration sẽ rollback khi gặp lỗi cấu trúc hoặc phát hiện policy khác cần rà soát; đây không phải công cụ tự chuyển đổi mọi schema cũ. Không xóa policy/bảng cũ để ép chạy. Cần lập migration bổ sung khi cấu trúc khác nhau; không dùng `DROP TABLE` hay reset project.
+
+Có thể kiểm tra trạng thái RLS bằng truy vấn chỉ đọc sau trong SQL Editor:
+
+```sql
+select relname as table_name, relrowsecurity as rls_enabled,
+       relforcerowsecurity as rls_forced
+from pg_class
+where relnamespace = 'public'::regnamespace
+  and relname in (
+    'profiles', 'lesson_progress', 'viewed_signs', 'favorite_signs',
+    'practice_sessions', 'quiz_attempts', 'study_activities'
+  )
+order by relname;
+```
+
+Kết quả mong đợi: đủ 7 bảng, `rls_enabled` và `rls_forced` đều là `true`. SQL Editor thường chạy với quyền quản trị, vì vậy việc nhìn thấy mọi hàng ở đây không phải cách kiểm thử phân quyền giữa hai user; dùng hai tài khoản qua ứng dụng ở bước 7.
 
 ## 2. Cấu hình Authentication
 
@@ -20,11 +51,11 @@ Trong Supabase Dashboard:
 - Authentication → Providers / Sign In → bật Email và cho phép đăng ký email/password.
 - Tắt **Confirm email** cho MVP như yêu cầu. Nếu vẫn bật, ứng dụng báo rõ không nhận được phiên đăng nhập, không giả lập gửi email hoặc đăng nhập thành công.
 - Đặt độ dài mật khẩu tối thiểu 8 ký tự. Giao diện kiểm tra nhập lại mật khẩu; Supabase áp dụng quy tắc bảo mật cuối cùng.
-- Authentication → URL Configuration: Site URL là origin HTTPS thật của website. Thêm origin local `http://127.0.0.1:3000` khi phát triển; chỉ thêm preview URL tin cậy khi cần. Luồng hiện tại là email/password qua backend, không có OAuth hay magic-link callback.
+- Authentication → URL Configuration: với project chỉ dùng local, đặt Site URL là `http://127.0.0.1:3000`. Với project triển khai thật, đặt Site URL là origin HTTPS thật của website, ví dụ `https://YOUR_SITE.vercel.app`. Khi cần Redirect URLs, khai báo rõ URL local/preview tin cậy; tránh wildcard quá rộng. Luồng hiện tại dùng email/password qua backend và không có OAuth, magic-link hoặc callback mới cần tạo.
 - Giữ cơ chế refresh token rotation và khoảng reuse mặc định của Supabase; ứng dụng có thể gửi nhiều request đồng thời từ các tab.
 - Project Settings → API: lấy Project URL và **Publishable key** dạng `sb_publishable_...`. Code chủ động từ chối Secret key và legacy JWT keys để tránh dùng nhầm quyền cao.
 
-Tham khảo chính thức: [Password Auth](https://supabase.com/docs/guides/auth/passwords), [User sessions](https://supabase.com/docs/guides/auth/sessions), [User data and RLS](https://supabase.com/docs/guides/auth/managing-user-data).
+Tham khảo chính thức: [Password Auth](https://supabase.com/docs/guides/auth/passwords), [Redirect URLs](https://supabase.com/docs/guides/auth/redirect-urls), [User sessions](https://supabase.com/docs/guides/auth/sessions), [User data and RLS](https://supabase.com/docs/guides/auth/managing-user-data).
 
 ## 3. Environment variables trên Vercel Services
 
@@ -73,21 +104,82 @@ Streak chỉ đọc `study_activities`, được ghi cùng transaction khi hoàn
 
 ## 6. Chạy và kiểm thử local
 
-Tạo `backend/.env` và `frontend/.env.local` từ file mẫu bằng credentials của project phát triển riêng. Không dùng project production để thử nghiệm ghi dữ liệu.
+### 6.1. Tạo file môi trường, giữ nguyên file đã có
+
+Kiểm tra `backend/.env` và `frontend/.env.local` trước khi tạo. Nếu đã có, mở và bổ sung biến còn thiếu; giữ nguyên giá trị đang có cho đến khi bạn chủ động thay đổi. Không copy đè file đã cấu hình.
+
+Nếu chưa có, có thể tạo từ mẫu bằng PowerShell dưới đây, chạy tại **gốc repo**. Lệnh chỉ copy khi file đích chưa tồn tại:
 
 ```powershell
-# Terminal 1, trong backend/
+if (-not (Test-Path -LiteralPath backend/.env)) {
+    Copy-Item -LiteralPath backend/.env.example -Destination backend/.env
+}
+if (-not (Test-Path -LiteralPath frontend/.env.local)) {
+    Copy-Item -LiteralPath frontend/.env.example -Destination frontend/.env.local
+}
+```
+
+**File `backend/.env`:**
+
+```dotenv
+# Thay hai placeholder bằng thông tin project Supabase thật
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
+
+# Giữ development khi chạy local
+APP_ENV=development
+```
+
+**File `frontend/.env.local`:**
+
+```dotenv
+# Phải trùng Project URL và Publishable key trong backend/.env
+NEXT_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_YOUR_KEY
+
+# Backend FastAPI local
+LOCAL_BACKEND_URL=http://127.0.0.1:8001
+```
+
+Bạn cần thay **4 dòng Supabase** trong hai file bằng URL/key thật. Dán URL đúng như Dashboard cung cấp, không thêm `/auth/v1`, `/rest/v1`, dấu cách hay ký tự minh họa `YOUR_PROJECT`. Các placeholder chưa điền không thể dùng để đăng nhập.
+
+Giữ nguyên `APP_ENV=development` và `LOCAL_BACKEND_URL=http://127.0.0.1:8001` khi chạy local theo hướng dẫn. `LOCAL_BACKEND_URL` đã có giá trị mặc định này trong code, nhưng ghi rõ trong file giúp kiểm tra cấu hình. `API_HOST`, `API_PORT`, `CORS_ORIGINS` có sẵn giá trị mặc định phù hợp trong backend; các giá trị tương ứng ở file mẫu có thể giữ nguyên. `DATABASE_URL` có thể để trống, không cần thêm database password.
+
+### 6.2. Khởi động hai dịch vụ
+
+Dùng hai terminal riêng. Các lệnh `cd` dưới đây đều bắt đầu tại gốc repo:
+
+```powershell
+# Terminal 1
+cd backend
 uv sync --group dev
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8001
+```
 
-# Terminal 2, trong frontend/
+```powershell
+# Terminal 2
+cd frontend
 npm ci
 npm run dev
 ```
 
-Mở `http://127.0.0.1:3000` để cả hai framework dùng cùng origin. `.env.example` của frontend có `LOCAL_BACKEND_URL`; không đặt biến này trên Vercel. Chỉ giữ localhost trong `CORS_ORIGINS` cho local, không bật CORS wildcard. Trên Vercel, frontend/backend giao tiếp cùng origin và không cần cross-origin credentials.
+Mở **http://127.0.0.1:3000/login?lang=vi** để đăng ký/đăng nhập. Truy cập khu học qua port **3000**, để Next.js chuyển tiếp các đường dẫn backend và giữ cùng origin. Không dùng `python serve.py` ở port 8000 cho luồng Auth này; đó là preview renderer cũ.
 
-Kiểm tra tự động:
+Kiểm tra API qua proxy bằng terminal thứ ba:
+
+```powershell
+Invoke-RestMethod http://127.0.0.1:3000/api/health
+```
+
+Kết quả mong đợi có `status: ok`. Health chỉ xác nhận API đang chạy, chưa xác nhận kết nối Supabase. Đăng ký/đăng nhập và lưu/khôi phục dữ liệu ở bước 7 mới kiểm tra kết nối thực.
+
+Sau khi thay `.env`, dừng và chạy lại cả hai server. Nếu dùng `npm run start`, cần build lại frontend trước để cập nhật các biến `NEXT_PUBLIC_*`.
+
+Không đặt `LOCAL_BACKEND_URL` trên Vercel. Chỉ giữ localhost trong `CORS_ORIGINS` cho local, không bật CORS wildcard. Trên Vercel, frontend/backend giao tiếp cùng origin và không cần cross-origin credentials.
+
+### 6.3. Kiểm tra tự động
+
+Chạy từng nhóm lệnh trong đúng thư mục được ghi ở phần chú thích:
 
 ```powershell
 # backend/
@@ -100,6 +192,9 @@ npm run typecheck
 npm run lint
 npm test
 npm run test:deployment
+
+# frontend/, khi cả Next.js và FastAPI local đang chạy
+npm run test:http
 
 # repo root: PostgreSQL WASM, cài dưới thư mục runtime bị gitignore
 npm install --prefix .runtime/sql-check @electric-sql/pglite
@@ -121,4 +216,40 @@ Test FastAPI mock dịch vụ Auth/PostgREST để kiểm tra HTTP contract; tes
 9. Kiểm tra DevTools: API riêng tư có `Cache-Control: private, no-store`; không có token ở localStorage/response JSON; cookie `sh_access`/`sh_refresh` có HttpOnly/Secure. Thử JWT giả, `user_id` tự gửi và đọc bảng bằng tài khoản khác: phải bị chặn hoặc không trả hàng của người khác.
 10. Kiểm tra `/`, `/features`, video VSL, camera tự luyện, mascot, sidebar, onboarding và responsive trên điện thoại. Thử mạng lỗi lúc lưu: không báo thành công; thử lại cùng lượt không tạo dữ liệu trùng.
 
-Nếu lỗi `supabase_not_configured`: kiểm tra biến đúng backend service. `learning_unavailable`: kiểm tra migration/RPC/grants/RLS. `origin_rejected`: kiểm tra request qua đúng origin và forwarded host trên Vercel. Không khắc phục bằng tắt RLS hoặc đưa Service Role key vào client.
+## 8. Đưa hướng dẫn lên GitHub
+
+Đưa file **`SUPABASE_SETUP.md` ở gốc repo** lên GitHub cùng source code tích hợp và migration được tham chiếu. Không cần tạo một bản hướng dẫn khác có thông tin project riêng.
+
+Các file cấu hình được chia sẻ là `frontend/.env.example` và `backend/.env.example`, giữ placeholder hoặc để trống. Các file thực `frontend/.env.local` và `backend/.env` chỉ nằm trên máy bạn; chúng không được commit.
+
+Trước khi tự commit, chạy từ gốc repo:
+
+```powershell
+# Phải hiển thị quy tắc .env.* và .env trong .gitignore
+git check-ignore -v -- frontend/.env.local backend/.env
+
+# Mong đợi không có kết quả: hai file thực chưa được Git track
+git ls-files -- frontend/.env.local backend/.env
+
+# Xem các file đang được chuẩn bị commit, không in nội dung credentials
+git diff --cached --name-only
+```
+
+Nếu hai file thực xuất hiện trong danh sách tracked/staged, xử lý trước khi commit. Không dùng `git add -f` để ép thêm chúng và không upload `.env` qua giao diện GitHub. Credentials cũng không được dán vào README, issue, ảnh chụp màn hình hoặc ví dụ trong tài liệu này.
+
+Khi review xong, bạn tự commit/push theo nhánh đang sử dụng. Việc đưa tài liệu lên GitHub không tự chạy SQL migration; vẫn phải thực hiện bước 1 trong đúng Supabase Project. Biến môi trường trên Vercel được điền qua cài đặt project/service, không lấy từ file `.env` local đã bị Git bỏ qua. Chỉ deploy sau khi hoàn tất các bước cấu hình và kiểm tra phù hợp.
+
+## 9. Lỗi thường gặp
+
+- **`supabase_not_configured`**: thiếu URL/key ở backend. Kiểm tra đúng file `backend/.env` hoặc đúng backend service trên Vercel; sau đó khởi động lại.
+- **`supabase_unavailable`**: kiểm tra URL đã thay placeholder, project đang hoạt động và máy/server truy cập được Supabase.
+- **`authentication_failed` / `invalid_credentials`**: kiểm tra email/password, Publishable key đúng project và hai phía dùng cùng URL/key.
+- **`email_confirmation_required` / `email_not_confirmed`**: kiểm tra Confirm email đã tắt đúng project cho MVP. Nếu tài khoản được tạo trước đó đang chưa xác nhận, kiểm tra riêng trạng thái tài khoản trong Authentication.
+- **`learning_unavailable`**: kiểm tra đã chạy toàn bộ migration trong đúng project, có đủ bảng/RPC/grants/RLS, và Data API có bật với schema `public`. Đăng nhập thành công chưa bảo đảm schema học tập đã được tạo.
+- **`origin_rejected`**: dùng đúng `http://127.0.0.1:3000` qua Next proxy khi local; kiểm tra origin/forwarded host khi Vercel. Giữ `APP_ENV=development` cho local.
+- **Frontend báo URL không hợp lệ hoặc cấu hình không khớp**: bỏ placeholder, copy đúng origin HTTPS từ Dashboard và dùng cùng cặp URL/key ở hai file. Khởi động lại hoặc build lại Next.js sau thay đổi.
+- **API `/api/auth/session` trả `401` khi chưa đăng nhập**: đây là trạng thái dự kiến. Sau khi đăng nhập thành công, gọi cùng browser có cookie phải nhận đúng user.
+- **Health OK nhưng chưa vào được khu học**: tiếp tục kiểm tra Supabase Auth, migration và credentials; health không kết nối Supabase.
+- **Migration báo policy/schema cũ không tương thích**: dừng và đối chiếu schema trước khi lập migration bổ sung. Không reset database, xóa dữ liệu hoặc tắt RLS để bỏ qua lỗi.
+
+Tài liệu mô tả cách cấu hình; trạng thái kết nối thực phải được xác minh trên project của người triển khai. Đối với kết quả kiểm thử code và các phần chưa xác minh trên Supabase hosted, xem [báo cáo triển khai](docs/SUPABASE_IMPLEMENTATION.md).
