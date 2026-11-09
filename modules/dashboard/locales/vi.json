@@ -38,7 +38,7 @@
   "dashboard.shortcut.practice": "Tự luyện",
   "dashboard.shortcut.practice.note": "Dùng gương camera và tự đánh giá lượt luyện.",
   "dashboard.shortcut.review": "Ôn tập",
-  "dashboard.shortcut.review.note": "Ôn bằng thẻ ghi nhớ và kiểm tra theo bài.",
+  "dashboard.shortcut.review.note": "Xem video và chọn đáp án đúng.",
   "dashboard.retry.title": "Nên luyện lại",
   "dashboard.retry.note": "Dựa trên lượt tự đánh giá gần nhất của mỗi ký hiệu.",
   "dashboard.retry.count": "Tự đánh giá: {n}/5 mục",
