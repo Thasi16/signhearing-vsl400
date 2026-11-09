@@ -38,7 +38,7 @@
   "dashboard.shortcut.practice": "Self-practice",
   "dashboard.shortcut.practice.note": "Use a camera mirror and assess your own practice.",
   "dashboard.shortcut.review": "Review",
-  "dashboard.shortcut.review.note": "Revisit flashcards and take a quiz for each lesson.",
+  "dashboard.shortcut.review.note": "Watch sign videos and choose the correct answer.",
   "dashboard.retry.title": "Worth practising again",
   "dashboard.retry.note": "Based on your latest self-assessment for each sign.",
   "dashboard.retry.count": "Self-assessment: {n}/5 items",
