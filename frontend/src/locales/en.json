@@ -90,6 +90,7 @@
   "contact.missing.body": "The project has not published an official email address or contact link yet. We will update this space once the details are confirmed. This page does not collect or send feedback.",
   "footer.description": "A starting point for exploring Vietnamese Sign Language.",
   "footer.note": "Project in development · Learning materials in preparation",
+  "footer.attribution": "Model training data: VSL400 (Zenodo) – licensed under CC BY 4.0. SignLight is a practice tool and does not replace an interpreter.",
   "app.eyebrow": "SEE YOU AT THE NEXT CHAPTER",
   "app.title": "A new journey is being prepared.",
   "app.body": "Explore SignHearing's learning path, sign dictionary, self-practice and progress tools.",
