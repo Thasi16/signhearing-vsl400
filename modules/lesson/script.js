@@ -82,6 +82,7 @@
     function playback() {
       play.textContent = SH.t(video.paused ? 'lesson.video.play' : 'lesson.video.pause');
       play.setAttribute('aria-pressed', String(!video.paused));
+      video.title = play.textContent;
     }
     video.addEventListener('volumechange', () => {
       if (!video.muted) video.muted = true;
@@ -89,7 +90,7 @@
     });
     ['play', 'pause', 'ended'].forEach((event) => video.addEventListener(event, playback));
     video.addEventListener('error', unavailable);
-    play.addEventListener('click', () => {
+    function togglePlayback() {
       if (video.paused) {
         video.muted = true;
         const attempt = video.play();
@@ -98,6 +99,14 @@
           else playback();
         });
       } else video.pause();
+    }
+    play.addEventListener('click', togglePlayback);
+    video.addEventListener('click', togglePlayback);
+    video.tabIndex = 0;
+    video.addEventListener('keydown', (event) => {
+      if (event.key !== ' ' && event.key !== 'Enter') return;
+      event.preventDefault();
+      if (!event.repeat) togglePlayback();
     });
     controls.querySelectorAll('[data-rate]').forEach((button) => {
       button.addEventListener('click', () => { video.playbackRate = Number(button.dataset.rate); });
@@ -115,6 +124,7 @@
     });
     video.controls = false;
     controls.hidden = false;
+    playback();
     if (video.error) unavailable();
   }
 
