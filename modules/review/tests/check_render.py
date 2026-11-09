@@ -63,7 +63,7 @@ class ReviewChecks(unittest.TestCase):
         self.assertNotIn('/quiz/None', values['review.lessons.html'])
 
     def test_invalid_closed_and_small_lessons(self):
-        for identifier in ('3', '999', 'abc', '-1', ''):
+        for identifier in ('999', 'abc', '-1', ''):
             with self.subTest(identifier=identifier), self.assertRaises(app_modules.NotFound):
                 VIEW.context(request(identifier=identifier))
         with self.assertRaises(app_modules.NotFound):

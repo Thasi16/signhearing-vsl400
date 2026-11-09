@@ -29,11 +29,12 @@ def context(request):
         media_label = (t['dictionary.video.imported'] if local
                        else t['dictionary.video.available']) if video_source(sign) else t['dictionary.video.missing']
         module_id = module['id'] if module else 'local'
-        meaning = ('' if local else
+        meaning = ('' if local or not c.text(sign['meaning'], locale) else
                    f'<p class="dictionary-card-meaning">{esc(c.text(sign["meaning"], locale))}</p>')
-        context = '' if local else f'<p class="dictionary-card-context">{esc(caption)}</p>'
+        context = f'<p class="dictionary-card-context">{esc(caption)}</p>' if lesson else ''
         return (
-            f'<li class="dictionary-item" data-slug="{esc(sign["slug"])}" data-module="{esc(module_id)}" data-search="{esc(search)}">'
+            f'<li class="dictionary-item" data-slug="{esc(sign["slug"])}" data-module="{esc(module_id)}" '
+            f'data-collection="{esc(sign.get("collection", ""))}" data-search="{esc(search)}">'
             f'<a class="sh-card dictionary-card" href="{esc(request.url("/app/signs/" + sign["slug"]))}">'
             f'<span class="dictionary-card-badges">{sample(sign)}'
             f'<span class="sh-badge dictionary-favorite-mark" data-favorite-mark hidden>{esc(t["dictionary.favorite.mark"])}</span></span>'

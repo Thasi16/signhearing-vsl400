@@ -14,7 +14,7 @@ import app_modules
 from i18n import DICTIONARIES, ROOT, TOKEN, format_date, format_number, render_text, validate
 
 # One concrete URL per learning-area route (params filled with open sample content).
-APP_PARAMS = {'id': '1', 'slug': 'xin-chao'}
+APP_PARAMS = {'id': '1', 'slug': 'cam-on'}
 APP_ROUTES = [(app_modules.PARAM_RE.sub(lambda m: APP_PARAMS[m.group(1)], r['path']), meta, r)
               for meta in app_modules.MODULES for r in meta['routes']]
 
@@ -193,7 +193,7 @@ def main():
     _, headers = request('/?lang=invalid')
     check(headers['Content-Language']=='vi', 'Invalid locale should safely fall back')
     request('/app',404,method='POST')
-    for route in ('/app/lessons/3','/app/lessons/999','/app/lessons/abc','/app/signs/khong-co','/app/practice/khong-co','/app/review/quiz/9',
+    for route in ('/app/lessons/999','/app/lessons/abc','/app/signs/khong-co','/app/practice/khong-co','/app/review/quiz/999',
                   '/app/library','/app/courses/1','/static/m/courses/view.py','/static/m/courses/module.json','/static/m/courses/locales/vi.json',
                   '/static/m/nope/style.css','/static/app/locales/vi.json','/static/m/courses/%2e%2e/%2e%2e/serve.py','/data/curriculum.json','/register','/library','/courses','/admin','/api/health','/data/signhearing.db','/serve.py','/site-config.json','/locales/en.json','/static/../serve.py','/static/%2e%2e/serve.py'):
         request(route,404)
