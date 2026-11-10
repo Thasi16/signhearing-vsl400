@@ -13,7 +13,7 @@ Luồng hoạt động: **website → backend Vercel cấp token → Cloudflare 
 - Máy cần được cài thư viện inference. TensorFlow và MediaPipe phải nằm trong **hai môi trường Python riêng** vì khác phiên bản phụ thuộc.
 - Cần quyền quản lý biến môi trường backend trên Vercel. Không thay đổi OAuth Redirect URLs hoặc Supabase schema để thiết lập AI.
 
-Mở PowerShell tại thư mục gốc bản code có `ai_inference`, ví dụ bản đã kiểm tra trên máy này:
+Mở PowerShell tại thư mục gốc bản code có `ai_inference`. Ví dụ trên máy đã kiểm tra:
 
 ```powershell
 cd C:\Users\Admin\Desktop\final_demo\signhearing-vsl400\.runtime\siformer-cpu-preview

@@ -1,8 +1,8 @@
 # SiFormer CPU — xác minh và giới hạn triển khai
 
-Ngày 10/11/2026. Theo yêu cầu mới nhất, chủ dự án đã cho phép đưa code lên
-`main`; Git integration của repository này tự triển khai Production. Mốc code
-trước tính năng AI là `be544a4a1e6b74567d284c56fe2566638b2a3d6a`.
+Kết quả kiểm tra ngày 10/11/2026 trên bản thử nghiệm của chủ dự án. Bản thử
+nghiệm được đưa lên `Thasi16/test_` trước khi chuẩn bị pull request này; PR
+hướng tới `vercal` và không tự merge hoặc triển khai thay cho dự án đích.
 Không cài Ubuntu/WSL, không dùng GPU, không retrain hay thay checkpoint.
 
 ## Nguồn, preprocessing và nhãn

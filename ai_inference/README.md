@@ -60,7 +60,7 @@ nạp SiFormer duy nhất lúc startup và tái sử dụng cho các request ti�
 
 ## Chạy ngay trên máy hiện tại
 
-Chạy từ `C:/Users/Admin/Desktop/final_demo/signhearing-vsl400`.
+Chạy từ thư mục gốc bản checkout chứa `ai_inference`.
 Python 3.12 hiện có trên máy đã chạy được TensorFlow 2.20.0. Môi trường
 MediaPipe sẵn có là `../demo/.../.venv-mp` theo đường dẫn tuyệt đối dưới đây.
 
