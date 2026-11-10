@@ -1,4 +1,5 @@
-(function(){'use strict';
+(async function(){'use strict';
+  if (window.SH) { try { await window.SH.ready; } catch (error) { return; } }
   const SH = window.SH;
   if (!SH) return;
   const page = document.querySelector('.m-review .review-page');
@@ -85,6 +86,7 @@
     let answered = false;
     let finished = false;
     let mistakes = [];
+    let attemptId;
 
     function optionsFor(sign, signs) {
       const used = new Set([wordKey(sign.word)]);
@@ -174,11 +176,17 @@
       find('[data-next-question]').focus({ preventScroll: true });
     }
 
-    function finish() {
+    async function finish() {
       if (finished || !answered || position !== questions.length - 1) return;
       finished = true;
       const total = questions.length;
-      SH.store.addQuizResult(id, score, total);
+      find('[data-next-question]').disabled = true;
+      const saved = await SH.store.addQuizResult(id, score, total, attemptId);
+      if (!saved) {
+        finished = false;
+        find('[data-next-question]').disabled = false;
+        return;
+      }
       stopMedia(find('[data-question-media]'));
       find('[data-question-card]').hidden = true;
       find('[data-result]').hidden = false;
@@ -201,6 +209,7 @@
     }
 
     function restart(focus) {
+      attemptId = crypto.randomUUID();
       const signs = videoMode
         ? SH.data.signs.filter((sign) => safeVideo(sign.video))
         : SH.signsOf(id).filter((sign) => safeVideo(sign.video));

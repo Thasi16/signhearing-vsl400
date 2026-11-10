@@ -28,7 +28,7 @@ def context(request):
                    if lesson else t['dictionary.collection.name'])
         media_label = (t['dictionary.video.imported'] if local
                        else t['dictionary.video.available']) if video_source(sign) else t['dictionary.video.missing']
-        module_id = module['id'] if module else 'local'
+        module_id = module['id'] if module else 'unassigned'
         meaning = ('' if local or not c.text(sign['meaning'], locale) else
                    f'<p class="dictionary-card-meaning">{esc(c.text(sign["meaning"], locale))}</p>')
         context = f'<p class="dictionary-card-context">{esc(caption)}</p>' if lesson else ''
@@ -45,7 +45,8 @@ def context(request):
 
     slug = request.params.get('slug')
     if slug is None:
-        signs = c.signs()
+        # Keep legacy detail URLs readable without counting them in the syllabus.
+        signs = [sign for sign in c.signs() if sign['lesson'] is not None]
         module_ids = {lesson['module'] for sign in signs if (lesson := c.lesson(sign['lesson']))}
         filters = []
         local_signs = [sign for sign in signs if sign.get('collection') == 'local-videos']
@@ -72,7 +73,8 @@ def context(request):
     if not sign:
         raise request.NotFound()
     lesson = c.lesson(sign['lesson'])
-    local = sign.get('collection') == 'local-videos' and sign['lesson'] is None
+    legacy = sign.get('collection') == 'legacy-samples'
+    local = sign.get('collection') in ('local-videos', 'legacy-samples') and sign['lesson'] is None
     if (not lesson and not local) or (lesson and not c.is_open(lesson)):
         raise request.NotFound()
     module = c.module(lesson['module']) if lesson else None
@@ -84,7 +86,7 @@ def context(request):
     video += ('<div class="sh-video-placeholder" data-video-missing' + (' hidden' if source else '') + '>'
               + f'<span>{esc(t["shell.video.missing"])}</span></div>')
     if local:
-        lesson_link = esc(t['dictionary.collection.unassigned'])
+        lesson_link = esc(t['dictionary.legacy.name'] if legacy else t['dictionary.collection.unassigned'])
     else:
         lesson_caption = t['dictionary.detail.lesson'].replace('{n}', str(lesson['id'])).replace('{title}', c.text(lesson['title'], locale))
         lesson_link = f'<a href="{esc(request.url("/app/lessons/" + str(lesson["id"])))}">{esc(lesson_caption)}</a>'
@@ -93,7 +95,7 @@ def context(request):
     variants = [value for value in variants if value.strip()]
     variants_html = ('<ul>' + ''.join(f'<li>{esc(value)}</li>' for value in variants) + '</ul>'
                      if variants else f'<p>{esc(t["dictionary.variants.empty"])}</p>')
-    related = ([other for other in c.signs() if other.get('collection') == 'local-videos' and other['slug'] != slug]
+    related = ([other for other in c.signs() if other.get('collection') == sign.get('collection') and other['slug'] != slug]
                if local else [other for other in c.signs(lesson['id']) if other['slug'] != slug])
     return {
         'dictionary.heading': c.text(sign['word'], locale),
@@ -104,9 +106,9 @@ def context(request):
         'dictionary.sample.html': sample(sign),
         'dictionary.media.html': video,
         'dictionary.lesson.html': lesson_link,
-        'dictionary.module_name': t['dictionary.collection.name'] if local else c.text(module['title'], locale),
+        'dictionary.module_name': (t['dictionary.legacy.name'] if legacy else t['dictionary.collection.name']) if local else c.text(module['title'], locale),
         'dictionary.module_caption': t['dictionary.collection.label'] if local else t['dictionary.module.label'],
-        'dictionary.related_heading': t['dictionary.collection.related'] if local else t['dictionary.related.title'],
+        'dictionary.related_heading': t['dictionary.legacy.name'] if legacy else t['dictionary.collection.related'] if local else t['dictionary.related.title'],
         'dictionary.variants.html': variants_html,
         'dictionary.practice_url': request.url('/app/practice/' + slug),
         'dictionary.back_url': request.url('/app/dictionary'),

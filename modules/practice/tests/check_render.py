@@ -68,7 +68,7 @@ class PracticeChecks(unittest.TestCase):
         groups = VIEW.context(request())['practice.groups.html']
         choices = {attrs['data-slug'] for tag, attrs in Markup(groups).tags if 'data-slug' in attrs}
         self.assertEqual({sign['slug'] for sign in content.signs()}, choices)
-        self.assertNotIn('practice-local-title', groups)
+        self.assertIn('practice-legacy-title', groups)
         self.assertIn('practice-lesson-1', groups)
         self.assertIn('practice-lesson-2', groups)
         self.assertIn('practice-lesson-18', groups)
