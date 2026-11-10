@@ -1,4 +1,4 @@
-"""Render the multiple-choice video review experience."""
+"""Render video multiple-choice review, retaining valid lesson quiz links."""
 
 
 def context(request):
@@ -19,7 +19,6 @@ def context(request):
             'review.video_quiz_url': request.url('/app/review/quiz/video'),
             'review.sample_slugs': sample_slugs,
         }
-
     requested_lesson = None
     if lesson_id != 'video':
         requested_lesson = c.lesson(lesson_id)
@@ -27,6 +26,8 @@ def context(request):
             raise request.NotFound()
     requested_video_signs = ([sign for sign in c.signs(requested_lesson['id']) if sign.get('video')]
                              if requested_lesson else [])
+    if requested_lesson and len(requested_video_signs) < 2:
+        raise request.NotFound()
     if lesson_id == 'video' or len(requested_video_signs) < 2:
         signs = [sign for sign in c.signs() if sign.get('video')]
         if len(signs) < 2:
@@ -36,10 +37,10 @@ def context(request):
             f'<p>{esc(c.text(sign["meaning"], locale))}</p></li>' for sign in signs)
         return {
             'review.heading': t['review.video_quiz.heading'],
-            'review.lesson_title': '',
+            'review.lesson_title': t['review.video_quiz.lead'].replace('{n}', str(len(signs))),
             'review.lesson_id': 'video',
             'review.quiz_mode': 'video',
-            'review.quiz.rule': '',
+            'review.quiz.rule': t['review.video_quiz.rule'],
             'review.sample.html': '',
             'review.sample_slugs': sample_slugs,
             'review.reading.html': reading,
@@ -47,18 +48,18 @@ def context(request):
             'review.courses_url': request.url('/app/courses'),
             'review.back_url': request.url('/app/review'),
         }
-
     lesson = requested_lesson
-    signs = c.signs(lesson['id'])
+    if not lesson or not c.is_open(lesson) or len(c.signs(lesson['id'])) < 2:
+        raise request.NotFound()
+    signs = requested_video_signs
     reading = ''.join(
         f'<li><h3>{esc(c.text(sign["word"], locale))}</h3>{sample(sign)}'
         f'<p>{esc(c.text(sign["meaning"], locale))}</p></li>' for sign in signs)
     return {
         'review.heading': t['review.quiz.title'] + ' · ' + t['review.quiz.lesson'].replace('{n}', str(lesson['id'])),
-        'review.lesson_title': '',
+        'review.lesson_title': c.text(lesson['title'], locale),
         'review.lesson_id': str(lesson['id']),
         'review.quiz_mode': 'lesson',
-        'review.quiz.rule': '',
         'review.sample.html': sample(lesson),
         'review.sample_slugs': sample_slugs,
         'review.reading.html': reading,

@@ -5,7 +5,8 @@
   <div class="sh-card dictionary-toolbar" data-toolbar hidden>
     <div class="dictionary-search" role="search" aria-label="{{dictionary.search.label}}">
       <label for="dictionary-search">{{dictionary.search.label}}</label>
-      <input id="dictionary-search" type="search" data-search-input placeholder="{{dictionary.search.placeholder}}" aria-controls="dictionary-results" autocomplete="off" spellcheck="false">
+      <input id="dictionary-search" type="search" data-search-input placeholder="{{dictionary.search.placeholder}}" aria-describedby="dictionary-search-hint" aria-controls="dictionary-results" autocomplete="off" spellcheck="false">
+      <p id="dictionary-search-hint">{{dictionary.search.hint}}</p>
     </div>
     <div class="dictionary-filters" role="group" aria-label="{{dictionary.filter.label}}">
       <button class="sh-chip" type="button" data-module-filter="all" aria-pressed="true">{{dictionary.filter.all}}</button>

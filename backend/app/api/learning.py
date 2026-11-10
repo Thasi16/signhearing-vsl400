@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import FileResponse, HTMLResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse, Response
 
+from app.api.progress import snapshot_for
+from app.core.timing import measure
 from app.services import legacy
+from app.services import supabase as sb
 
 router = APIRouter(include_in_schema=False)
 
@@ -12,11 +15,12 @@ def locale_for(request: Request) -> str:
     return query if query in ("vi", "en") else "en" if cookie == "en" else "vi"
 
 
-def page_response(request: Request, path: str) -> HTMLResponse:
+def page_response(request: Request, path: str, initial_state: dict | None = None) -> HTMLResponse:
     locale = locale_for(request)
     # Unknown paths never enter template URLs.
     canonical = path if path == "/login" or legacy.app_modules.is_app_path(path) else "/404"
-    body, status = legacy.render(locale, canonical)
+    with measure("render"):
+        body, status = legacy.render(locale, canonical, initial_state=initial_state)
     response = HTMLResponse(
         body,
         status_code=status,
@@ -55,8 +59,40 @@ def login_page(request: Request) -> Response:
 
 @router.api_route("/app", methods=["GET", "HEAD"])
 @router.api_route("/app/{path:path}", methods=["GET", "HEAD"])
-def learning_page(request: Request, path: str = "") -> Response:
-    response = page_response(request, "/app/" + path if path else "/app")
+async def learning_page(request: Request, path: str = "") -> Response:
+    try:
+        who = await sb.identity(request)
+    except sb.SupabaseError as error:
+        if error.status != 401:
+            raise
+        from urllib.parse import urlencode
+
+        response = RedirectResponse(
+            "/login?"
+            + urlencode(
+                {
+                    "lang": locale_for(request),
+                    "next": request.url.path
+                    + ("?" + request.url.query if request.url.query else ""),
+                }
+            ),
+            status_code=303,
+        )
+        sb.clear_session(response)
+        return response
+    target = "/app/" + path if path else "/app"
+    initial_state = None
+    if legacy.app_modules.is_app_path(target):
+        try:
+            # Reuse the identity already verified for this navigation. The browser
+            # must not repeat auth + snapshot requests before showing every page.
+            initial_state = await snapshot_for(who)
+        except sb.SupabaseError as error:
+            # Keep the existing retry/sign-out screen available during an outage.
+            initial_state = {"error": error.code}
+    response = page_response(request, target, initial_state=initial_state)
+    if who.refreshed:
+        sb.set_session(response, request, who.refreshed)
     if request.method == "HEAD":
         response.body = b""
     return response
@@ -66,5 +102,9 @@ def learning_page(request: Request, path: str = "") -> Response:
 def static_asset(request: Request, path: str) -> Response:
     candidate = legacy.static_file("/static/" + path)
     if candidate:
-        return FileResponse(candidate, headers={"Cache-Control": "no-cache"})
+        cache = "no-cache"
+        version = request.query_params.get("v")
+        if version and candidate.suffix != ".mp4" and version == legacy.asset_version(candidate):
+            cache = "public, max-age=31536000, immutable"
+        return FileResponse(candidate, headers={"Cache-Control": cache})
     return page_response(request, "/404")

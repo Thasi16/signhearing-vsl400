@@ -1160,6 +1160,11 @@ html[lang="en"] .hero h1 {
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
+@media (max-width: 700px) {
+  .footer-copyright {
+    flex-basis: 100%;
+  }
+}
 .footer-bottom a {
   display: inline-flex;
   align-items: center;
